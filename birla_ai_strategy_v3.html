@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Birla AI Labs — Group AI Strategy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#111111;--ink2:#27272A;--ink3:#52525B;--ink4:#71717A;--ink5:#A1A1AA;
+  --paper:#F4F4F5;--paper2:#E4E4E7;--paper3:#D4D4D8;
+  --gold:#8185EE;--gold2:#9395F0;--gold3:#A8ABFF;--gold-l:#EEEDFE;
+  --red:#8B1A1A;--red-l:#FAE8E8;--teal:#1A6B5A;--teal-l:#E2F5EF;
+  --blue:#1A3A6B;--blue-l:#E2EAF5;--orange:#C84800;--orange-l:#FBF0E8;
+  --purple:#4A1A6B;--purple-l:#F0E8FB;--green:#1A6B1A;--green-l:#E8F5E8;
+  --r:8px;--r2:14px;--r3:20px;
+  --sh:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.04);
+  --sh2:0 2px 8px rgba(0,0,0,0.08),0 8px 24px rgba(0,0,0,0.06);
+}
+body{font-family:'Avenir','Avenir Next',Nunito,-apple-system,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;}
+/* HEADER */
+.site-header{background:var(--ink);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--gold);}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:26px;height:26px;background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);flex-shrink:0;}
+.logo-text{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:15px;font-weight:700;color:#fff;}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;}
+.h-badges{display:flex;gap:8px;}
+.h-badge{font-size:10px;padding:2px 9px;border-radius:20px;background:rgba(129,133,238,0.2);color:var(--gold3);letter-spacing:0.05em;}
+/* MAIN NAV */
+.main-nav{background:var(--ink);border-bottom:1px solid rgba(255,255,255,0.06);padding:0 1.5rem;display:flex;overflow-x:auto;}
+.main-nav::-webkit-scrollbar{height:2px;}.main-nav::-webkit-scrollbar-thumb{background:var(--gold);}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:13px 18px;font-family:'Avenir','Avenir Next',Nunito,-apple-system,sans-serif;font-size:12px;font-weight:500;color:rgba(255,255,255,0.4);cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.tab-btn:hover:not(.active){color:rgba(255,255,255,0.7);}
+.tab-btn.active{color:var(--gold3);border-bottom-color:var(--gold3);}
+.tab-num{font-family:'DM Mono',monospace;font-size:10px;opacity:0.5;margin-right:5px;}
+/* PANELS */
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+/* SUB NAV */
+.sub-nav{display:flex;gap:8px;padding:1.25rem 1.5rem 0;background:var(--paper);border-bottom:1px solid var(--paper3);position:sticky;top:52px;z-index:100;}
+.sub-btn{background:none;border:none;padding:8px 16px;font-family:'Avenir','Avenir Next',Nunito,-apple-system,sans-serif;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;border-radius:var(--r);transition:all 0.2s;}
+.sub-btn.active{background:var(--ink);color:var(--gold3);}
+.sub-btn:hover:not(.active){background:var(--paper3);}
+.sub-section{display:none;padding:1.5rem;}.sub-section.active{display:block;}
+/* CARDS */
+.card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--sh);}
+.card h3{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+/* GRIDS */
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem;}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1rem;}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:1.25rem;}
+/* KPI row */
+.kpi-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem;}
+.kpi{flex:1;min-width:110px;background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);padding:1rem;box-shadow:var(--sh);}
+.kpi .kv{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:24px;font-weight:700;line-height:1;}
+.kpi .kl{font-size:11px;color:var(--ink3);margin-top:4px;text-transform:uppercase;letter-spacing:0.07em;}
+/* SECTION TITLE */
+.sec-title{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.sec-sub{font-size:13px;color:var(--ink3);margin-bottom:1.25rem;line-height:1.6;}
+/* STRATEGY BANNER */
+.strat-banner{border-radius:var(--r2);padding:1.5rem;margin-bottom:1.25rem;}
+.strat-banner h2{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:20px;font-weight:700;margin-bottom:6px;}
+.strat-banner p{font-size:13px;line-height:1.7;opacity:0.85;}
+/* PROS CONS */
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem;}
+@media(max-width:600px){.pros-cons{grid-template-columns:1fr;}}
+.pros-box,.cons-box{border-radius:var(--r);padding:12px 14px;}
+.pros-box{background:var(--teal-l);border-left:3px solid var(--teal);}
+.cons-box{background:var(--red-l);border-left:3px solid var(--red);}
+.pros-box h4{font-size:12px;font-weight:600;margin-bottom:8px;color:var(--teal);}
+.cons-box h4{font-size:12px;font-weight:600;margin-bottom:8px;color:var(--red);}
+.pros-box li,.cons-box li{font-size:11px;line-height:1.6;margin-left:14px;margin-bottom:3px;}
+/* BADGES */
+.badge{font-size:11px;padding:2px 9px;border-radius:var(--r);font-weight:500;}
+.bg{background:var(--teal-l);color:var(--teal);}.ba{background:var(--gold-l);color:var(--gold);}
+.br{background:var(--red-l);color:var(--red);}.bb{background:var(--blue-l);color:var(--blue);}
+/* SCORING TABLE */
+.scoring-wrap{overflow-x:auto;border-radius:var(--r2);border:1px solid var(--paper3);box-shadow:var(--sh2);}
+table.scoring-tbl{width:100%;border-collapse:collapse;min-width:1150px;}
+table.scoring-tbl thead tr{background:var(--ink);}
+table.scoring-tbl th{padding:10px 8px;color:rgba(255,255,255,0.65);font-size:10px;font-weight:500;text-align:center;letter-spacing:0.05em;white-space:nowrap;text-transform:uppercase;}
+table.scoring-tbl th.col-co{text-align:left;padding:10px 12px;position:sticky;left:0;background:var(--ink);z-index:2;}
+table.scoring-tbl th.col-score{color:var(--gold3);font-weight:600;}
+table.scoring-tbl th .wt{display:block;color:var(--gold3);font-size:9px;margin-top:2px;opacity:0.9;}
+table.scoring-tbl td{padding:6px 6px;text-align:center;border-bottom:1px solid var(--paper2);background:#fff;}
+table.scoring-tbl td.co-cell{text-align:left;padding:10px 12px;position:sticky;left:0;background:#fff;z-index:1;}
+table.scoring-tbl tr:nth-child(even) td{background:#FAFAF8;}
+table.scoring-tbl tr:nth-child(even) td.co-cell{background:#FAFAF8;}
+table.scoring-tbl tr:hover td{background:var(--gold-l)!important;}
+.co-name-cell{font-weight:600;font-size:13px;color:var(--ink);}
+.co-sector-cell{font-size:10px;color:var(--ink3);margin-top:1px;}
+.score-cell{padding:10px 12px!important;}
+.score-num{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:22px;font-weight:700;line-height:1;}
+.score-lbl{font-size:10px;font-weight:500;margin-top:2px;}
+.score-bar-wrap{height:4px;background:var(--paper2);border-radius:2px;margin-top:5px;overflow:hidden;}
+.score-bar{height:100%;border-radius:2px;transition:width 0.4s ease;}
+select.dim-select{width:100%;padding:4px;font-size:11px;border:1px solid var(--paper3);border-radius:4px;background:#fff;font-family:'Avenir','Avenir Next',Nunito,-apple-system,sans-serif;cursor:pointer;color:var(--ink2);}
+select.dim-select:focus{outline:none;border-color:var(--gold);}
+.sc-strong{color:#1A6B1A;}.sc-good{color:#5A7A1A;}.sc-mod{color:#B8860B;}.sc-weak{color:var(--red);}
+.sb-strong{background:#1A6B1A;}.sb-good{background:#5A7A1A;}.sb-mod{background:#B8860B;}.sb-weak{background:var(--red);}
+.table-controls{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.sort-btn{font-size:12px;padding:6px 14px;border:1px solid var(--paper3);border-radius:var(--r);background:#fff;cursor:pointer;font-family:'Avenir','Avenir Next',Nunito,-apple-system,sans-serif;color:var(--ink2);transition:all 0.2s;}
+.sort-btn:hover,.sort-btn.active-sort{background:var(--ink);color:var(--gold3);border-color:var(--ink);}
+.tbl-note{font-size:11px;color:var(--ink3);}
+
+/* ─────────── DYNAMIC TOP SCORER SECTION ─────────── */
+.dyn-header{border-radius:var(--r2);padding:1.5rem;color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;position:relative;overflow:hidden;}
+.dyn-header::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%);pointer-events:none;}
+.dyn-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;opacity:0.55;margin-bottom:4px;}
+.dyn-name{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:24px;font-weight:700;margin-bottom:5px;}
+.dyn-sector{font-size:12px;opacity:0.65;max-width:480px;line-height:1.6;}
+.dyn-score-box{text-align:right;flex-shrink:0;}
+.dyn-score-num{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:42px;font-weight:700;color:var(--gold3);line-height:1;}
+.dyn-score-lbl{font-size:11px;color:rgba(255,255,255,0.55);margin-top:2px;}
+.dyn-total-val{font-size:13px;color:var(--gold3);margin-top:6px;font-weight:600;}
+
+/* USE CASE CARDS */
+.uc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1rem;margin:1.25rem 0;}
+@media(max-width:780px){.uc-grid{grid-template-columns:1fr;}}
+.uc-card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);transition:box-shadow 0.2s,transform 0.2s;}
+.uc-card:hover{box-shadow:var(--sh2);transform:translateY(-2px);}
+.uc-top{padding:1rem 1.25rem;background:var(--paper);border-bottom:1px solid var(--paper2);}
+.uc-top-row1{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.uc-rank-badge{font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:#fff;background:var(--ink3);padding:2px 8px;border-radius:var(--r);flex-shrink:0;}
+.uc-title{font-size:14px;font-weight:600;color:var(--ink);flex:1;}
+.uc-value{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:17px;font-weight:700;color:var(--teal);}
+.uc-top-row2{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.uc-time{font-size:11px;color:var(--ink3);}
+.uc-rationale{padding:8px 1.25rem;font-size:11px;color:var(--ink3);font-style:italic;line-height:1.55;background:#FAFAFA;border-bottom:1px solid var(--paper2);}
+.uc-agents-wrap{padding:1rem 1.25rem;}
+.agents-hdr{font-size:10px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;}
+.agent-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--paper2);align-items:flex-start;}
+.agent-row:last-child{border-bottom:none;}
+.agent-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:4px;}
+.agent-body{}
+.agent-name{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.agent-desc{font-size:11px;color:var(--ink3);line-height:1.5;margin-bottom:3px;}
+.agent-build{font-size:10px;color:var(--gold);font-weight:600;letter-spacing:0.03em;}
+.uc-timeline{padding:8px 1.25rem 10px;border-top:1px solid var(--paper2);}
+.mini-track{height:8px;background:var(--paper3);border-radius:4px;position:relative;margin-bottom:5px;overflow:hidden;}
+.mini-bar{position:absolute;height:100%;border-radius:4px;}
+.mini-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--ink4);font-family:'DM Mono',monospace;}
+
+/* GANTT SUMMARY */
+.gantt-card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);padding:1.25rem;box-shadow:var(--sh);overflow-x:auto;}
+.gantt-card h3{font-size:13px;font-weight:600;margin-bottom:4px;}
+.gantt-card .ch-sub{font-size:11px;color:var(--ink4);margin-bottom:1rem;}
+.gantt-inner{min-width:600px;}
+.gantt-hdr{display:flex;align-items:center;margin-bottom:8px;}
+.gantt-lbl-spacer{min-width:220px;flex-shrink:0;}
+.gantt-months{flex:1;position:relative;height:18px;}
+.gantt-m-tick{position:absolute;font-size:10px;color:var(--ink4);font-family:'DM Mono',monospace;transform:translateX(-50%);white-space:nowrap;}
+.gantt-row-wrap{display:flex;align-items:center;margin-bottom:7px;}
+.gantt-row-lbl{min-width:220px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding-right:12px;}
+.gr-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);min-width:18px;}
+.gr-name{font-size:12px;color:var(--ink2);flex:1;line-height:1.3;}
+.gr-val{font-size:10px;color:var(--teal);font-weight:600;white-space:nowrap;}
+.gantt-track-full{flex:1;height:26px;background:var(--paper2);border-radius:4px;position:relative;overflow:hidden;}
+.gantt-fill{position:absolute;height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;}
+.gantt-fill-lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,0.9);white-space:nowrap;}
+
+/* ROI TABLE */
+.roi-table{width:100%;border-collapse:collapse;font-size:12px;}
+.roi-table th{text-align:left;padding:7px 10px;color:var(--ink3);font-weight:500;border-bottom:2px solid var(--paper3);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
+.roi-table td{padding:8px 10px;border-bottom:1px solid var(--paper2);vertical-align:middle;}
+.roi-table tr:hover td{background:var(--paper);}
+.roi-table tr:last-child td{border-bottom:none;}
+.roi-table tr.total td{background:var(--ink);color:#fff;font-weight:600;}
+
+/* CLUSTER CARDS (horizontal) */
+.cluster-card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);margin-bottom:1rem;}
+.cluster-hdr{padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.cluster-hdr h3{font-size:14px;font-weight:600;margin:0;}
+.cluster-body{padding:0 1.25rem 1.25rem;}
+.agent-row-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--paper2);}
+.agent-row-h:last-child{border-bottom:none;}
+.arn{font-size:12px;font-weight:500;color:var(--ink);flex:1;}
+.ard{font-size:11px;color:var(--ink3);flex:2;line-height:1.5;}
+.arv{font-size:12px;font-weight:600;min-width:90px;text-align:right;}
+
+/* PLATFORM GRID */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:1.25rem;}
+.plat-card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);padding:1.25rem;box-shadow:var(--sh);}
+.plat-icon{width:36px;height:36px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px;}
+.plat-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.plat-val{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:18px;font-weight:700;margin:4px 0;}
+.plat-desc{font-size:11px;color:var(--ink3);line-height:1.5;}
+
+/* RECOMMENDATION */
+.rec-criteria{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:1.25rem;}
+.crit-card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r);padding:10px 12px;box-shadow:var(--sh);}
+.crit-num{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:20px;font-weight:700;color:var(--gold);line-height:1;}
+.crit-name{font-size:12px;font-weight:500;color:var(--ink);margin:3px 0 2px;}
+.crit-desc{font-size:11px;color:var(--ink3);line-height:1.4;}
+.top10-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.top10-tbl th{text-align:left;padding:7px 10px;color:var(--ink3);font-weight:500;border-bottom:2px solid var(--paper3);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
+.top10-tbl td{padding:8px 10px;border-bottom:1px solid var(--paper2);vertical-align:middle;}
+.top10-tbl tr:hover td{background:var(--paper);}
+.ease-bar{height:8px;background:var(--paper3);border-radius:4px;width:80px;overflow:hidden;display:inline-block;vertical-align:middle;}
+.ease-fill{height:100%;border-radius:4px;}
+.type-h{font-size:10px;padding:2px 7px;border-radius:var(--r);background:var(--blue-l);color:var(--blue);font-weight:500;}
+.type-v{font-size:10px;padding:2px 7px;border-radius:var(--r);background:var(--teal-l);color:var(--teal);font-weight:500;}
+.phase-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:1.25rem;}
+.phase-card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);}
+.phase-hdr{padding:1rem 1.25rem;}
+.ph-num{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;opacity:0.7;}
+.ph-name{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:15px;font-weight:700;margin:2px 0;}
+.ph-period{font-size:11px;opacity:0.6;}
+.phase-body{padding:0 1.25rem 1.25rem;}
+.phase-uc{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--paper2);}
+.phase-uc:last-child{border-bottom:none;}
+.ph-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.ph-un{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;}
+.ph-uw{font-size:11px;color:var(--ink3);line-height:1.4;}
+.phase-footer{padding:10px 1.25rem;border-top:1px solid var(--paper2);}
+.ph-inv{font-size:11px;color:var(--ink3);}
+.ph-roi{font-size:13px;font-weight:600;margin-top:2px;}
+
+/* ABG / TAB 1 */
+.abg-hero{background:linear-gradient(135deg,var(--ink) 0%,#1A1710 100%);border-radius:var(--r3);padding:2rem;margin-bottom:1.25rem;position:relative;overflow:hidden;}
+.abg-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:240px;height:240px;background:radial-gradient(circle,rgba(129,133,238,0.12) 0%,transparent 70%);}
+.hero-title{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:4px;position:relative;}
+.hero-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:1.5rem;position:relative;}
+.hero-kpis{display:flex;flex-wrap:wrap;gap:10px;position:relative;}
+.hk{flex:1;min-width:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r2);padding:12px 14px;}
+.hk .v{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:22px;font-weight:700;color:var(--gold3);line-height:1;}
+.hk .l{font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase;letter-spacing:0.07em;}
+.treemap{display:grid;gap:5px;margin-bottom:1.25rem;}
+.tm-row{display:flex;gap:5px;}
+.tm-cell{border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;min-height:70px;cursor:default;transition:opacity 0.2s;}
+.tm-cell:hover{opacity:0.85;}
+.tm-cn{font-size:11px;font-weight:600;color:#fff;line-height:1.3;}
+.tm-cv{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:15px;font-weight:700;color:#fff;}
+.tm-cs{font-size:10px;color:rgba(255,255,255,0.55);}
+.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1.25rem;}
+@media(max-width:760px){.charts-grid{grid-template-columns:1fr;}}
+.chart-card{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);padding:1.25rem;box-shadow:var(--sh);}
+.chart-card h3{font-size:13px;font-weight:600;margin-bottom:4px;}
+.ch-sub{font-size:11px;color:var(--ink4);margin-bottom:1rem;}
+.mb-wrap{display:flex;flex-direction:column;gap:7px;}
+.mb-r{display:flex;align-items:center;gap:10px;}
+.mb-l{font-size:11px;color:var(--ink2);min-width:155px;text-align:right;}
+.mb-t{flex:1;height:20px;background:var(--paper2);border-radius:4px;overflow:hidden;}
+.mb-f{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:7px;}
+.mb-p{font-size:11px;font-weight:600;color:#fff;}
+.emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1.25rem;}
+.emp-c{background:var(--paper);border-radius:var(--r);padding:12px;text-align:center;}
+.emp-n{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:20px;font-weight:700;line-height:1;}
+.emp-name{font-size:11px;color:var(--ink3);margin-top:3px;}
+.emp-b{height:4px;background:var(--paper3);border-radius:2px;margin-top:7px;overflow:hidden;}
+.emp-bf{height:100%;border-radius:2px;}
+.dt{width:100%;border-collapse:collapse;font-size:12px;}
+.dt th{text-align:left;padding:7px 8px;color:var(--ink3);font-weight:500;border-bottom:2px solid var(--paper3);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
+.dt td{padding:8px 8px;border-bottom:1px solid var(--paper2);vertical-align:middle;}
+.dt tr:hover td{background:var(--paper);}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr.ttl td{background:var(--paper);font-weight:600;}
+.rev-bi{height:5px;background:var(--paper3);border-radius:3px;width:90px;overflow:hidden;display:inline-block;vertical-align:middle;margin-left:6px;}
+.rev-fi{height:100%;border-radius:3px;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink3);}
+.ld{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.footnote{font-size:11px;color:var(--ink4);border-top:1px solid var(--paper3);padding-top:1rem;margin-top:1.5rem;line-height:1.8;}
+.tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:var(--r);margin:2px 2px 0 0;background:var(--paper2);color:var(--ink3);}
+/* PLACEHOLDER */
+.placeholder-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;padding:2rem;}
+.placeholder-tab h2{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:26px;margin-bottom:8px;}
+.coming-badge{font-size:11px;padding:4px 12px;border-radius:20px;background:var(--gold-l);color:var(--gold);font-weight:600;margin-bottom:16px;display:inline-block;}
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(12px);transition:opacity 0.5s,transform 0.5s;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <div><div class="logo-text">Birla AI Labs</div><div class="logo-sub">Group AI Strategy</div></div>
+  </div>
+  <div class="h-badges"><span class="h-badge">FY 2025 Data</span></div>
+</header>
+<nav class="main-nav">
+  <button class="tab-btn active" onclick="switchTab('companies',this)"><span class="tab-num">01</span>ABG Companies</button>
+  <button class="tab-btn" onclick="switchTab('usecases',this)"><span class="tab-num">02</span>Use Cases</button>
+  <button class="tab-btn" onclick="switchTab('agents',this)"><span class="tab-num">03</span>AI Agents</button>
+  <button class="tab-btn" onclick="switchTab('vendor',this)"><span class="tab-num">04</span>Technology stand up options</button>
+</nav>
+
+<!-- ═══ TAB 1: ABG COMPANIES ═══ -->
+<div id="tab-companies" class="tab-panel active">
+<div style="padding:1.5rem;">
+  <div class="abg-hero reveal">
+    <div class="hero-title">Aditya Birla Group — Portfolio Overview</div>
+    <div class="hero-sub">7 listed companies · 40+ businesses · 36 countries</div>
+    <div class="hero-kpis">
+      <div class="hk"><div class="v">$70B+</div><div class="l">Group Revenue</div></div>
+      <div class="hk"><div class="v">187K+</div><div class="l">Employees</div></div>
+      <div class="hk"><div class="v">$100B+</div><div class="l">Market Cap</div></div>
+      <div class="hk"><div class="v">36</div><div class="l">Countries</div></div>
+      <div class="hk"><div class="v">167 yrs</div><div class="l">Heritage</div></div>
+    </div>
+  </div>
+  <div class="reveal">
+    <div class="sec-title">Revenue footprint</div>
+    <div class="sec-sub">Annual revenue (₹ Cr, FY2025) — box area proportional to revenue.</div>
+    <div class="treemap">
+      <div class="tm-row">
+        <div class="tm-cell" style="background:var(--red);flex:238496;"><div class="tm-cn">Hindalco Industries</div><div style="display:flex;align-items:flex-end;justify-content:space-between;"><div class="tm-cv">₹2,38,496 Cr</div><div class="tm-cs">Metals</div></div></div>
+        <div class="tm-cell" style="background:var(--blue);flex:74936;"><div class="tm-cn">UltraTech Cement</div><div style="display:flex;align-items:flex-end;justify-content:space-between;"><div class="tm-cv">₹74,936 Cr</div><div class="tm-cs">Cement</div></div></div>
+      </div>
+      <div class="tm-row">
+        <div class="tm-cell" style="background:var(--teal);flex:44267;"><div class="tm-cn">Grasim (standalone)</div><div><div class="tm-cv">₹44,267 Cr</div><div class="tm-cs">Diversified</div></div></div>
+        <div class="tm-cell" style="background:var(--purple);flex:43456;"><div class="tm-cn">Vodafone Idea</div><div><div class="tm-cv">₹43,456 Cr</div><div class="tm-cs">Telecom</div></div></div>
+        <div class="tm-cell" style="background:var(--orange);flex:34000;"><div class="tm-cn">AB Capital</div><div><div class="tm-cv">~₹34,000 Cr</div><div class="tm-cs">Fin. Services</div></div></div>
+      </div>
+      <div class="tm-row">
+        <div class="tm-cell" style="background:#5A7A5A;flex:16000;"><div class="tm-cn">Birla Carbon</div><div><div class="tm-cv">~₹16,000 Cr</div><div class="tm-cs">Carbon Black</div></div></div>
+        <div class="tm-cell" style="background:#6B4A2B;flex:7619;"><div class="tm-cn">AB Lifestyle Brands</div><div><div class="tm-cv">₹7,619 Cr</div><div class="tm-cs">Fashion (Premium)</div></div></div>
+        <div class="tm-cell" style="background:#2B4A6B;flex:7355;"><div class="tm-cn">ABFRL</div><div><div class="tm-cv">₹7,355 Cr</div><div class="tm-cs">Fashion/Ethnic</div></div></div>
+        <div class="tm-cell" style="background:#8B6B1A;flex:2000;"><div class="tm-cn">Birla Opus</div><div><div class="tm-cv">~₹2,000 Cr</div><div class="tm-cs">Paints</div></div></div>
+        <div class="tm-cell" style="background:#5A5A5A;flex:2200;"><div class="tm-cn">Others</div><div><div class="tm-cv">₹2,200+ Cr</div><div class="tm-cs">Renew, Estates…</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="charts-grid reveal">
+    <div class="chart-card">
+      <h3>Revenue comparison — major entities (₹ Crore, FY2025)</h3>
+      <div class="ch-sub">Source: Company annual reports &amp; quarterly filings</div>
+      <div style="position:relative;height:280px;"><canvas id="revChart"></canvas></div>
+      <div class="legend">
+        <div class="li"><div class="ld" style="background:var(--red);"></div>Metals</div>
+        <div class="li"><div class="ld" style="background:var(--blue);"></div>Cement</div>
+        <div class="li"><div class="ld" style="background:var(--teal);"></div>Diversified</div>
+        <div class="li"><div class="ld" style="background:var(--purple);"></div>Telecom</div>
+        <div class="li"><div class="ld" style="background:var(--orange);"></div>Fin. Services</div>
+        <div class="li"><div class="ld" style="background:#6B4A2B;"></div>Fashion</div>
+        <div class="li"><div class="ld" style="background:#8B6B1A;"></div>Paints</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Revenue by vertical (%)</h3>
+      <div class="ch-sub">FY2025 total share</div>
+      <div style="position:relative;height:260px;"><canvas id="sectorPie"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-card reveal" style="margin-bottom:1.25rem;">
+    <h3>EBITDA margin comparison — FY2025</h3>
+    <div class="ch-sub" style="margin-bottom:1rem;">Manufacturing margins. Vi = EBITDA-A (telecom basis). AB Capital = NIM-based.</div>
+    <div class="mb-wrap">
+      <div class="mb-r"><div class="mb-l">UltraTech Cement</div><div class="mb-t"><div class="mb-f" style="width:35%;background:var(--blue);"><span class="mb-p">17.7%</span></div></div></div>
+      <div class="mb-r"><div class="mb-l">AB Lifestyle Brands</div><div class="mb-t"><div class="mb-f" style="width:33%;background:#6B4A2B;"><span class="mb-p">16.7%</span></div></div></div>
+      <div class="mb-r"><div class="mb-l">Hindalco India</div><div class="mb-t"><div class="mb-f" style="width:30%;background:var(--red);"><span class="mb-p">14.9%</span></div></div></div>
+      <div class="mb-r"><div class="mb-l">Grasim (Standalone)</div><div class="mb-t"><div class="mb-f" style="width:30%;background:var(--teal);"><span class="mb-p">14.8%</span></div></div></div>
+      <div class="mb-r"><div class="mb-l">Birla Carbon*</div><div class="mb-t"><div class="mb-f" style="width:30%;background:#5A7A5A;"><span class="mb-p">~15%</span></div></div></div>
+      <div class="mb-r"><div class="mb-l">ABFRL</div><div class="mb-t"><div class="mb-f" style="width:23%;background:#2B4A6B;"><span class="mb-p">11.6%</span></div></div></div>
+      <div class="mb-r"><div class="mb-l">Vi (EBITDA-A)</div><div class="mb-t"><div class="mb-f" style="width:84%;background:var(--purple);"><span class="mb-p">~42%</span></div></div></div>
+      <div class="mb-r"><div class="mb-l">AB Capital (FS)</div><div class="mb-t" style="background:var(--paper2);display:flex;align-items:center;padding-left:8px;"><span style="font-size:11px;color:var(--ink4);">N/A — NIM-based (Financial Services)</span></div></div>
+    </div>
+  </div>
+  <div class="reveal"><div class="sec-title">Employee distribution</div><div class="sec-sub">Headcount by entity (FY2025). Total group: 187,000+</div>
+    <div class="emp-grid">
+      <div class="emp-c"><div class="emp-n" style="color:var(--teal);">45K+</div><div class="emp-name">Grasim Industries</div><div class="emp-b"><div class="emp-bf" style="width:100%;background:var(--teal);"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:var(--red);">38K+</div><div class="emp-name">Hindalco India</div><div class="emp-b"><div class="emp-bf" style="width:84%;background:var(--red);"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:var(--orange);">28K+</div><div class="emp-name">AB Capital</div><div class="emp-b"><div class="emp-bf" style="width:62%;background:var(--orange);"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:var(--blue);">26K+</div><div class="emp-name">UltraTech Cement</div><div class="emp-b"><div class="emp-bf" style="width:58%;background:var(--blue);"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:#6B4A2B;">22K+</div><div class="emp-name">AB Lifestyle Brands</div><div class="emp-b"><div class="emp-bf" style="width:49%;background:#6B4A2B;"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:#2B4A6B;">16K+</div><div class="emp-name">ABFRL</div><div class="emp-b"><div class="emp-bf" style="width:36%;background:#2B4A6B;"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:#5A4A6B;">13K+</div><div class="emp-name">Novelis</div><div class="emp-b"><div class="emp-bf" style="width:29%;background:#5A4A6B;"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:var(--purple);">9,985</div><div class="emp-name">Vodafone Idea</div><div class="emp-b"><div class="emp-bf" style="width:22%;background:var(--purple);"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:#5A7A5A;">7K+</div><div class="emp-name">Birla Carbon</div><div class="emp-b"><div class="emp-bf" style="width:16%;background:#5A7A5A;"></div></div></div>
+      <div class="emp-c"><div class="emp-n" style="color:#8B6B1A;">1,200+</div><div class="emp-name">Birla Opus</div><div class="emp-b"><div class="emp-bf" style="width:8%;background:#8B6B1A;"></div></div></div>
+    </div>
+  </div>
+  <div class="chart-card reveal" style="overflow-x:auto;">
+    <h3>Consolidated data table — all major ABG entities (FY2025)</h3>
+    <div class="ch-sub" style="margin-bottom:1rem;">* = estimate · FS entities show lending book / AUM</div>
+    <table class="dt">
+      <thead><tr><th>Company</th><th>Vertical</th><th>Revenue (₹ Cr)</th><th>EBITDA Margin</th><th>Employees</th><th>Listing</th><th>Scale</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Hindalco</strong></td><td>Metals</td><td>2,38,496</td><td>14.9%</td><td>38,000+</td><td style="color:var(--teal);font-weight:500;">NSE/BSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:100%;background:var(--red);height:5px;"></div></div></td></tr>
+        <tr><td>↳ Novelis</td><td>Aluminium</td><td>~1,42,000</td><td>~7.5%</td><td>13,000</td><td style="color:var(--teal);font-weight:500;">NYSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:60%;background:#6B3A1A;height:5px;"></div></div></td></tr>
+        <tr><td><strong>Grasim</strong> (consol.)</td><td>Diversified</td><td>1,48,478</td><td>13.5%</td><td>45,000+</td><td style="color:var(--teal);font-weight:500;">NSE/BSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:62%;background:var(--teal);height:5px;"></div></div></td></tr>
+        <tr><td><strong>UltraTech</strong></td><td>Cement</td><td>74,936</td><td>17.7%</td><td>26,000</td><td style="color:var(--teal);font-weight:500;">NSE/BSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:31%;background:var(--blue);height:5px;"></div></div></td></tr>
+        <tr><td><strong>Vodafone Idea</strong></td><td>Telecom</td><td>43,456</td><td>~42%*</td><td>9,985</td><td style="color:var(--teal);font-weight:500;">NSE/BSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:18%;background:var(--purple);height:5px;"></div></div></td></tr>
+        <tr><td><strong>AB Capital</strong></td><td>Fin. Services</td><td>~34,000*</td><td>NIM-based</td><td>28,000+</td><td style="color:var(--teal);font-weight:500;">NSE/BSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:14%;background:var(--orange);height:5px;"></div></div></td></tr>
+        <tr><td>Birla Carbon</td><td>Carbon Black</td><td>~16,000*</td><td>~15%*</td><td>7,000</td><td>Unlisted</td><td><div class="rev-bi"><div class="rev-fi" style="width:7%;background:#5A7A5A;height:5px;"></div></div></td></tr>
+        <tr><td>AB Lifestyle Brands</td><td>Fashion (Premium)</td><td>7,619</td><td>16.7%</td><td>~22,000</td><td style="color:var(--teal);font-weight:500;">NSE/BSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:3%;background:#6B4A2B;height:5px;"></div></div></td></tr>
+        <tr><td>ABFRL</td><td>Fashion (Ethnic)</td><td>7,355</td><td>11.6%</td><td>16,000</td><td style="color:var(--teal);font-weight:500;">NSE/BSE</td><td><div class="rev-bi"><div class="rev-fi" style="width:3%;background:#2B4A6B;height:5px;"></div></div></td></tr>
+        <tr><td>Birla Opus</td><td>Paints</td><td>~2,000*</td><td>Investment phase</td><td>~1,200</td><td>Grasim sub</td><td><div class="rev-bi"><div class="rev-fi" style="width:1%;background:#8B6B1A;height:5px;"></div></div></td></tr>
+        <tr class="ttl"><td><strong>ABG Group Total</strong></td><td>7 verticals · 40+ companies</td><td><strong>~$70B+</strong></td><td>—</td><td><strong>187,000+</strong></td><td><strong>7 listed</strong></td><td><div class="rev-bi"><div class="rev-fi" style="width:100%;background:var(--gold);height:5px;"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footnote">Data sources: Hindalco/UltraTech/Grasim FY25 press releases. Vodafone Idea: stockanalysis.com. ABFRL/ABLBL FY25 results. AB Capital: group estimates. Birla Carbon: industry estimates. Birla Opus: Grasim Q4FY25. * = estimates. Currency: $1 ≈ ₹85.5 (FY25 avg).</div>
+</div>
+</div>
+
+
+<!-- ═══ TAB 3: USE CASES ═══ -->
+<div id="tab-usecases" class="tab-panel">
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('s1',this)">Strategy 1 — Horizontal</button>
+    <button class="sub-btn" onclick="showSub('s2',this)">Strategy 2 — Vertical</button>
+    <button class="sub-btn" onclick="showSub('s3',this)">Recommendation</button>
+  </div>
+
+  <!-- SECTION 1: HORIZONTAL -->
+  <div id="s1" class="sub-section active">
+    <div class="strat-banner" style="background:var(--blue);color:#fff;">
+      <h2>Strategy 1: Going Horizontal</h2>
+      <p>Start with 5 group companies in 6–9 months. Once we see results, we replicate the same agents across the rest of the group — at a fraction of the original cost.</p>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros-box"><h4>✓ Advantages</h4><ul>
+        <li>5 group companies go live in 6–9 months — success drives rollout to the rest</li>
+        <li>Builds supporters across HR, Finance, and Legal teams</li>
+        <li>Once built for 5 companies, rolling out to others costs 70% less per company</li>
+        <li>Proven results at 5 companies makes the group-wide case automatically</li>
+      </ul></div>
+      <div class="cons-box"><h4>✗ Limitations</h4><ul>
+        <li>Shallow impact — no transformational use case</li>
+        <li>Won't deliver the most complex industrial AI use cases</li>
+        <li>Risk of being seen as a routine IT project</li>
+        <li>HR/Finance/Legal heads are not P&L owners</li>
+      </ul></div>
+    </div>
+    <p class="sec-title" style="font-size:18px;margin-bottom:4px;">HR AI Agents</p>
+    <div class="cluster-card">
+      <div class="cluster-hdr" style="background:var(--teal-l);border-bottom:1px solid var(--paper3);"><h3 style="color:var(--teal);">🧑‍💼 HR Agent Suite — 5 pilot group companies</h3><span class="badge bg">Deploy: Month 5–9</span></div>
+      <div class="cluster-body">
+        <div class="agent-row-h"><div class="arn">ESS Agent "Birla Assist"</div><div class="ard">24/7 Teams + WhatsApp bot for leave, payslips, policy Q&A, reimbursements. 80% query deflection — saves 12,000 HR admin hrs/month.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">Recruitment Screening Agent</div><div class="ard">JD → CV screening → interview scheduling → offer letters. 15,000 hires/yr. Time-to-hire: 45d → 18d. Reduces agency fees.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">Onboarding Orchestration</div><div class="ard">Automates 60+ manual touchpoints — docs, IT provisioning, induction, buddy. Day 1 readiness: 5 days → same day.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">Attrition Risk Agent</div><div class="ard">Monitors 15+ signals/employee weekly. Computes flight risk. Nudges managers with specific retention actions. 15% attrition reduction.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">L&D Personalisation Agent</div><div class="ard">Curates 90-day learning roadmap per employee. ABG spends ₹200+ Cr/yr on L&D. Training completion: 35% → 75%.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+      </div>
+    </div>
+    <p class="sec-title" style="font-size:18px;margin-bottom:4px;">Finance AI Agents</p>
+    <div class="cluster-card">
+      <div class="cluster-hdr" style="background:var(--gold-l);border-bottom:1px solid var(--paper3);"><h3 style="color:var(--gold);">💰 Finance Agent Suite — 5 pilot group companies</h3><span class="badge ba">Deploy: Month 5–8</span></div>
+      <div class="cluster-body">
+        <div class="agent-row-h"><div class="arn">AP Automation Agent</div><div class="ard">Invoice → OCR → 3-way PO match → SAP booking → vendor notification. 80% auto-processed. Cost/invoice: ₹400 → ₹35.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">Expense Audit Agent</div><div class="ard">Vision AI on receipts, policy checks, duplicate detection. 85% auto-approved. Policy violations caught 3× vs manual.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">FP&A Close Agent</div><div class="ard">Pulls SAP → variance analysis → draft commentary → management pack. Month-end close: D+7 → D+3.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">Treasury &amp; Cash Agent</div><div class="ard">Daily cash position across 40+ entities by 9AM. FX exposure monitoring. IC netting opportunities on ₹10,000 Cr+ group cash.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">GST / TDS Compliance Agent</div><div class="ard">Auto-reconciles 100+ GSTINs vs GSTR-2A/2B. Eliminates ₹30–50 Cr in ITC mismatches. Reduces compliance effort 70%.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+      </div>
+    </div>
+    <p class="sec-title" style="font-size:18px;margin-bottom:4px;">Legal AI Agents</p>
+    <div class="cluster-card">
+      <div class="cluster-hdr" style="background:var(--red-l);border-bottom:1px solid var(--paper3);"><h3 style="color:var(--red);">⚖️ Legal Agent Suite — 5 pilot group companies</h3><span class="badge br">Deploy: Month 5–9</span></div>
+      <div class="cluster-body">
+        <div class="agent-row-h"><div class="arn">Contract Review &amp; Redlining</div><div class="ard">Flags deviations from ABG standard positions, suggests redlines. Review: 4 hrs → 45 min. Reduces external counsel ₹50–70 Cr/yr.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">NDA Processing Agent</div><div class="ard">3,000 NDAs/yr. Standard NDA: 5 days → 2 hours, fully autonomous. Custom NDAs to lawyer with risk summary.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">Regulatory Monitoring Agent</div><div class="ard">15 regulator portals daily (RBI, SEBI, IRDAI, TRAI, MCA…). Zero missed circulars. Impact summaries + action items.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">Litigation Research Agent</div><div class="ard">Manupatra/SCC → ranked precedents → structured brief. Research: 8 hrs → 30 min. Saves ₹15–25 Cr external fees.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">IP Portfolio Management</div><div class="ard">Tracks thousands of trademarks (LP, VH, UltraTech, Birla Opus) + patents. Zero missed renewals. Weekly infringement scans.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+      </div>
+    </div>
+
+    <p class="sec-title" style="font-size:18px;margin-bottom:4px;">Marketing &amp; Sales AI Agents</p>
+    <div class="cluster-card">
+      <div class="cluster-hdr" style="background:var(--purple-l);border-bottom:1px solid var(--paper3);"><h3 style="color:var(--purple);">📣 Marketing &amp; Sales Agent Suite — 5 pilot group companies</h3><span class="badge" style="background:var(--purple-l);color:var(--purple);">Deploy: Month 6–9</span></div>
+      <div class="cluster-body">
+        <div class="agent-row-h"><div class="arn">Sales Conversation Intelligence</div><div class="ard">Records and transcribes every sales call. AI spots winning patterns, objection handling gaps, and customer intent signals. Sends each sales rep a post-call coaching summary automatically.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">Real-Time Sales Assist Agent</div><div class="ard">Listens live during customer calls and surfaces the right product, pricing, or response on the rep's screen — no searching, no hold time. Reduces average handling time 30%.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></div></div>
+        <div class="agent-row-h"><div class="arn">Lead Prioritisation Agent</div><div class="ard">Scores every inbound lead across all BUs by conversion likelihood and lifetime value. Routes high-value prospects to senior reps automatically and triggers timely follow-up nudges.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">Dealer &amp; Customer Outreach Agent</div><div class="ard">Personalises WhatsApp, SMS, and email campaigns using purchase history and behaviour. Automates follow-up sequences — sends the right message at the right time without manual effort.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+        <div class="agent-row-h"><div class="arn">Voice of Customer AI</div><div class="ard">Pulls feedback from calls, emails, WhatsApp, app reviews, and social. Clusters themes and scores sentiment. Alerts the right team when a complaint pattern or sales opportunity emerges.</div><div class="arv"><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#FBF3DC;color:#B8860B;font-weight:700;letter-spacing:0.02em;">● Medium</span></div></div>
+      </div>
+    </div>
+
+
+
+    <div class="card">
+      <h3>Horizontal strategy — ROI summary</h3>
+      <table class="roi-table">
+        <thead><tr><th>Stream</th><th>Investment (Yr1)</th><th>Annual Value</th><th>Payback</th></tr></thead>
+        <tbody>
+          <tr><td>HR Agents (5)</td><td>₹5 Cr</td><td><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></td><td>~3–5 months</td></tr>
+          <tr><td>Finance Agents (5)</td><td>₹8 Cr</td><td><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></td><td>~5 months</td></tr>
+          <tr><td>Legal Agents (5)</td><td>₹5 Cr</td><td><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></td><td>~6 months</td></tr>
+          <tr><td>Marketing &amp; Sales Agents (5)</td><td>₹6 Cr</td><td><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></td><td>~5 months</td></tr>
+          <tr class="total"><td><strong>Total Horizontal</strong></td><td><strong>₹24 Cr</strong></td><td><strong><span style="font-size:11px;padding:2px 10px;border-radius:5px;background:#E2F5EF;color:#1A6B5A;font-weight:700;letter-spacing:0.02em;">● High</span></strong></td><td><strong>&lt;6 months</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 2: VERTICAL -->
+  <div id="s2" class="sub-section">
+    <div class="strat-banner" style="background:var(--teal);color:#fff;">
+      <h2>Strategy 2: Going Vertical</h2>
+      <p>Pick one ABG company, embed a dedicated BAL pod, and solve every major AI problem it has. Build a replicable sector playbook — then export it to sister companies across the group.</p>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kv" style="color:var(--teal);">1</div><div class="kl">Anchor company</div></div>
+      <div class="kpi"><div class="kv" style="color:var(--teal);">6–8</div><div class="kl">AI use cases</div></div>
+      <div class="kpi"><div class="kv" style="color:var(--teal);">27–36 mo</div><div class="kl">Full deployment</div></div>
+
+    </div>
+    <div class="pros-cons">
+      <div class="pros-box"><h4>✓ Advantages</h4><ul>
+        <li>Transformational ROI — kiln AI alone = ₹400–500 Cr/yr</li>
+        <li>Creates a replicable sector playbook for sister companies</li>
+        <li>BU management is deeply invested — best cooperation</li>
+        <li>Builds proprietary AI models unique to ABG</li>
+      </ul></div>
+      <div class="cons-box"><h4>✗ Limitations</h4><ul>
+        <li>Only 1 company benefits for the first 18–27 months</li>
+        <li>Other 39 BUs wait — "what are we paying for?"</li>
+        <li>Higher complexity — OT/IT integration, SCADA, edge</li>
+        <li>Depends heavily on anchor company leadership</li>
+      </ul></div>
+    </div>
+
+    <!-- SCORING TABLE -->
+    <p class="sec-title" style="font-size:18px;margin-bottom:4px;">Company selection — AI implementation readiness score</p>
+    <p class="sec-sub">Change any dropdown to re-score. The <strong>AI Fit Score</strong> and the use cases below update instantly to show the best-fit company.</p>
+    <div class="table-controls">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="sort-btn active-sort" id="sortBtn" onclick="sortTable()">↓ Sort by Score</button>
+        <button class="sort-btn" onclick="resetDefaults()">↺ Reset defaults</button>
+      </div>
+      <div class="tbl-note">Hover column headers for descriptions · Weights sum to 100%</div>
+    </div>
+    <div class="scoring-wrap">
+      <table class="scoring-tbl" id="scoringTable">
+        <thead>
+          <tr>
+            <th class="col-co">Company</th>
+            <th title="How much money AI can save or generate">Revenue Impact<span class="wt">10%</span></th>
+            <th title="How good and accessible the data is">Data Readiness<span class="wt">15%</span></th>
+            <th title="How much leadership wants to do this">Leadership Buy-in<span class="wt">20%</span></th>
+            <th title="How quickly we see financial results">Time to ROI<span class="wt">12%</span></th>
+            <th title="How many useful AI applications exist here">Use Case Breadth<span class="wt">10%</span></th>
+            <th title="How hard it is to build — simpler scores higher ↓">Impl. Complexity ↓<span class="wt">10%</span></th>
+            <th title="Regulator approvals needed — fewer scores higher ↓">Regulatory Burden ↓<span class="wt">8%</span></th>
+            <th title="How modern the existing technology is">IT / OT Infra<span class="wt">5%</span></th>
+            <th title="How ready the team is for AI — more ready scores higher ↓">Change Mgmt Risk ↓<span class="wt">5%</span></th>
+            <th title="Can we reuse this at other group companies?">Replicability<span class="wt">5%</span></th>
+            <th class="col-score">AI Fit Score</th>
+          </tr>
+        </thead>
+        <tbody id="scoringTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- DYNAMIC SECTION — Top scorer use cases + agents + Gantt -->
+    <div id="topScorerSection" style="margin-top:1.5rem;display:none;"></div>
+  </div>
+
+  <!-- SECTION 3: RECOMMENDATION -->
+  <div id="s3" class="sub-section">
+    <div class="strat-banner" style="background:var(--gold);color:var(--ink);">
+      <h2 style="color:var(--ink);">Recommendation: Path of Least Resistance</h2>
+      <p style="color:var(--ink2);">Run both strategies in parallel — but lead with the 10 use cases that have the shortest path from idea to measurable P&L. Score each on 5 readiness dimensions and deploy fastest first.</p>
+    </div>
+    <div class="rec-criteria">
+      <div class="crit-card"><div class="crit-num">01</div><div class="crit-name">Data already exists</div><div class="crit-desc">The data needed already exists and is digital.</div></div>
+      <div class="crit-card"><div class="crit-num">02</div><div class="crit-name">Technology is proven</div><div class="crit-desc">Other companies have already solved this with AI.</div></div>
+      <div class="crit-card"><div class="crit-num">03</div><div class="crit-name">No regulatory approval</div><div class="crit-desc">No regulator approval needed before going live.</div></div>
+      <div class="crit-card"><div class="crit-num">04</div><div class="crit-name">ROI in 90 days</div><div class="crit-desc">Results can be measured in money within 90 days.</div></div>
+      <div class="crit-card"><div class="crit-num">05</div><div class="crit-name">Low integration complexity</div><div class="crit-desc">Straightforward to connect to existing systems.</div></div>
+    </div>
+    <p class="sec-title" style="font-size:18px;margin:1.25rem 0 4px;">3-phase implementation plan</p>
+    <div class="phase-wrap">
+      <div class="phase-card">
+        <div class="phase-hdr" style="background:var(--blue-l);">
+          <div class="ph-num" style="color:var(--blue);">Phase 1</div>
+          <div class="ph-name" style="color:var(--blue);">Zero-Risk Foundation</div>
+          <div class="ph-period" style="color:var(--blue);">Month 1–5</div>
+        </div>
+        <div class="phase-body" style="padding:1rem 1.25rem;">
+          <p style="font-size:12px;color:var(--ink3);line-height:1.7;margin:0;">Start with agents that require no write access to any system and no regulatory sign-off. Pick use cases where the data already exists in digital form, the AI produces a draft or an alert that a human reviews, and the cost of being wrong is low. These agents build internal trust and demonstrate speed of delivery without any business risk.</p>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-hdr" style="background:var(--gold-l);">
+          <div class="ph-num" style="color:var(--gold);">Phase 2</div>
+          <div class="ph-name" style="color:var(--gold);">High-ROI Agents</div>
+          <div class="ph-period" style="color:var(--gold);">Month 5–9</div>
+        </div>
+        <div class="phase-body" style="padding:1rem 1.25rem;">
+          <p style="font-size:12px;color:var(--ink3);line-height:1.7;margin:0;">Move to agents with a clear, measurable financial return within one quarter of going live. Choose high-volume, repetitive processes where the current manual effort is well-documented and a 10–15% improvement translates directly into cost savings or revenue. Run in shadow mode first — AI recommends, humans approve — then gradually increase automation as confidence builds.</p>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-hdr" style="background:var(--teal-l);">
+          <div class="ph-num" style="color:var(--teal);">Phase 3</div>
+          <div class="ph-name" style="color:var(--teal);">First Vertical Wins</div>
+          <div class="ph-period" style="color:var(--teal);">Month 9–14</div>
+        </div>
+        <div class="phase-body" style="padding:1rem 1.25rem;">
+          <p style="font-size:12px;color:var(--ink3);line-height:1.7;margin:0;">Pick one group company and go deep. Choose use cases that are core to that business's operations — not support functions — where the sensor data or transactional data already flows into a system. The AI here moves from advisory to directly influencing operational decisions. Success here becomes the proof point that unlocks cooperation from every other group company.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB 4, 5 ═══ -->
+<div id="tab-agents" class="tab-panel">
+<div style="padding:1.5rem;">
+
+  <p style="font-size:11px;font-weight:500;color:var(--gold);text-transform:uppercase;letter-spacing:0.09em;margin:0 0 3px;">Birla AI Labs — Agent Library</p>
+  <p class="sec-title" style="margin-bottom:3px;">AI Agents</p>
+  <p class="sec-sub" style="margin-bottom:1.5rem;">Select an agent to see how it works</p>
+
+  <!-- Agent selector pills -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem;">
+    <button onclick="showAgent('ap')" id="pill-ap" class="agent-pill active-pill">💰 AP Automation</button>
+    <button onclick="showAgent('ess')" id="pill-ess" class="agent-pill">🧑‍💼 Employee Self-Service</button>
+    <button onclick="showAgent('contract')" id="pill-contract" class="agent-pill">⚖️ Contract Review</button>
+    <button onclick="showAgent('churn')" id="pill-churn" class="agent-pill">📡 Churn Prediction</button>
+    <button onclick="showAgent('nda')" id="pill-nda" class="agent-pill">📄 NDA Processing</button>
+    <button onclick="showAgent('gst')" id="pill-gst" class="agent-pill">🧾 GST / TDS Compliance</button>
+  </div>
+
+  <style>
+    .agent-pill{font-family:inherit;font-size:12px;font-weight:500;padding:7px 16px;border-radius:var(--r2);border:1px solid var(--paper3);background:#fff;color:var(--ink3);cursor:pointer;transition:all 0.15s;}
+    .agent-pill:hover{background:var(--paper2);color:var(--ink);}
+    .agent-pill.active-pill{background:var(--ink);color:var(--gold3);border-color:var(--ink);}
+    .agent-flow-panel{display:none;}.agent-flow-panel.active-flow{display:block;}
+    .coming-flow{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);padding:3rem;text-align:center;color:var(--ink3);font-size:13px;box-shadow:var(--sh);}
+    .coming-flow .cf-icon{font-size:36px;margin-bottom:12px;}
+    .coming-flow h3{font-family:'Avenir Next','Avenir',Nunito,sans-serif;font-size:17px;font-weight:600;color:var(--ink);margin-bottom:6px;}
+  </style>
+
+  <!-- AP Automation flow -->
+  <div id="flow-ap" class="agent-flow-panel active-flow">
+    <div style="background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--paper2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div>
+          <p style="font-size:15px;font-weight:600;color:var(--ink);margin:0 0 2px;">AP Automation Agent</p>
+          <p style="font-size:12px;color:var(--ink3);margin:0;">Invoice receipt → SAP booking → vendor notification · Finance · All 40+ BUs</p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge bg">Horizontal · Fast Lane</span>
+          <span class="badge ba">Month 5–8 deploy</span>
+        </div>
+      </div>
+      <div style="overflow-x:auto;padding:1.25rem;">
+        <svg viewBox="0 0 900 580" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="ah"  markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#8185EE"/></marker>
+  <marker id="ahg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#10B981"/></marker>
+  <marker id="aha" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#F59E0B"/></marker>
+  <marker id="ahk" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#52525B"/></marker>
+  <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.07"/></filter>
+  <filter id="shp"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#8185EE" flood-opacity="0.15"/></filter>
+</defs>
+
+<!-- Background -->
+<rect width="900" height="580" fill="#F4F4F5"/>
+
+<!-- HEADER -->
+<rect width="900" height="50" fill="#111111"/>
+<text x="450" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="white" font-family="Nunito,sans-serif">AP Automation Agent</text>
+<text x="450" y="39" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.45)" font-family="Nunito,sans-serif">How an invoice moves from receipt to payment — zero human touch for 80% of cases</text>
+
+<!-- ── INPUT SOURCES (row of chips) ── -->
+<text x="450" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#A1A1AA" letter-spacing="1.5" font-family="Nunito,sans-serif">INVOICE ARRIVES VIA</text>
+
+<!-- Chip: Email -->
+<rect x="140" y="76" width="150" height="36" rx="18" fill="white" stroke="#D4D4D8" stroke-width="1" filter="url(#sh)"/>
+<text x="215" y="95" text-anchor="middle" font-size="18">📧</text>
+<text x="248" y="99" font-size="10" font-weight="600" fill="#111111" font-family="Nunito,sans-serif">Email</text>
+
+<!-- Chip: Portal -->
+<rect x="375" y="76" width="150" height="36" rx="18" fill="white" stroke="#D4D4D8" stroke-width="1" filter="url(#sh)"/>
+<text x="420" y="95" text-anchor="middle" font-size="18">🌐</text>
+<text x="438" y="99" font-size="10" font-weight="600" fill="#111111" font-family="Nunito,sans-serif">Vendor Portal</text>
+
+<!-- Chip: API -->
+<rect x="610" y="76" width="150" height="36" rx="18" fill="white" stroke="#D4D4D8" stroke-width="1" filter="url(#sh)"/>
+<text x="655" y="95" text-anchor="middle" font-size="18">🔌</text>
+<text x="673" y="99" font-size="10" font-weight="600" fill="#111111" font-family="Nunito,sans-serif">API / EDI</text>
+
+<!-- Converge lines -->
+<polyline points="215,112 215,126 400,126" fill="none" stroke="#8185EE" stroke-width="1.5" stroke-dasharray="4,3"/>
+<line x1="450" y1="112" x2="450" y2="136" stroke="#8185EE" stroke-width="2" marker-end="url(#ah)"/>
+<polyline points="685,112 685,126 500,126" fill="none" stroke="#8185EE" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+<!-- ── NODE 1: AI EXTRACTION ── -->
+<rect x="80" y="138" width="740" height="52" rx="10" fill="white" stroke="#8185EE" stroke-width="2" filter="url(#shp)"/>
+<rect x="80" y="138" width="740" height="4" rx="2" fill="#8185EE"/>
+<rect x="92" y="146" width="60" height="36" rx="6" fill="#EEEDFE"/>
+<text x="122" y="162" text-anchor="middle" font-size="18">🤖</text>
+<text x="122" y="178" text-anchor="middle" font-size="7.5" font-weight="700" fill="#8185EE" font-family="Nunito,sans-serif">AI READS</text>
+<text x="450" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">AI Extraction</text>
+<text x="450" y="178" text-anchor="middle" font-size="10" fill="#71717A" font-family="Nunito,sans-serif">Amazon Textract + Claude API reads the document and extracts all invoice fields</text>
+<rect x="738" y="150" width="72" height="22" rx="11" fill="#EEEDFE"/>
+<text x="774" y="165" text-anchor="middle" font-size="9" font-weight="700" fill="#8185EE" font-family="Nunito,sans-serif">95%+ accurate</text>
+
+<!-- Arrow -->
+<line x1="450" y1="190" x2="450" y2="206" stroke="#8185EE" stroke-width="2" marker-end="url(#ah)"/>
+
+<!-- ── NODE 2: VALIDATION ── -->
+<rect x="80" y="208" width="740" height="52" rx="10" fill="white" stroke="#D4D4D8" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="80" y="208" width="740" height="4" rx="2" fill="#111111"/>
+<rect x="92" y="216" width="60" height="36" rx="6" fill="#F4F4F5"/>
+<text x="122" y="232" text-anchor="middle" font-size="18">⚙️</text>
+<text x="122" y="248" text-anchor="middle" font-size="7.5" font-weight="700" fill="#52525B" font-family="Nunito,sans-serif">CHECKS</text>
+<text x="450" y="230" text-anchor="middle" font-size="13" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">Validation Engine</text>
+<text x="450" y="248" text-anchor="middle" font-size="10" fill="#71717A" font-family="Nunito,sans-serif">Runs 3-way match (Invoice ↔ PO ↔ GRN), GSTIN check, tolerance check, and duplicate scan simultaneously</text>
+<rect x="738" y="220" width="72" height="22" rx="11" fill="#F4F4F5" stroke="#D4D4D8" stroke-width="0.5"/>
+<text x="774" y="235" text-anchor="middle" font-size="9" font-weight="700" fill="#52525B" font-family="Nunito,sans-serif">Under 3 sec</text>
+
+<!-- Arrow to diamond -->
+<line x1="450" y1="260" x2="450" y2="278" stroke="#111111" stroke-width="2" marker-end="url(#ahk)"/>
+
+<!-- ── DECISION DIAMOND ── -->
+<polygon points="450,282 528,316 450,350 372,316" fill="white" stroke="#111111" stroke-width="2.5" filter="url(#sh)"/>
+<text x="450" y="311" text-anchor="middle" font-size="10.5" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">ALL CHECKS</text>
+<text x="450" y="326" text-anchor="middle" font-size="10.5" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">PASSED?</text>
+
+<!-- Left fork PASS -->
+<polyline points="372,316 230,316 230,364" fill="none" stroke="#10B981" stroke-width="3" marker-end="url(#ahg)"/>
+<rect x="244" y="297" width="80" height="22" rx="11" fill="#10B981"/>
+<text x="284" y="312" text-anchor="middle" font-size="9.5" font-weight="700" fill="white" font-family="Nunito,sans-serif">YES — 80%</text>
+
+<!-- Right fork EXCEPTION -->
+<polyline points="528,316 670,316 670,364" fill="none" stroke="#F59E0B" stroke-width="3" marker-end="url(#aha)"/>
+<rect x="576" y="297" width="88" height="22" rx="11" fill="#F59E0B"/>
+<text x="620" y="312" text-anchor="middle" font-size="9.5" font-weight="700" fill="white" font-family="Nunito,sans-serif">NO — 20%</text>
+
+<!-- ── LEFT PATH: PASS ── -->
+<!-- Auto-Book -->
+<rect x="30" y="366" width="400" height="46" rx="9" fill="white" stroke="#10B981" stroke-width="2" filter="url(#sh)"/>
+<rect x="30" y="366" width="400" height="4" rx="2" fill="#10B981"/>
+<text x="38" y="384" font-size="18">💾</text>
+<text x="230" y="385" text-anchor="middle" font-size="12" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">Auto-booked in SAP</text>
+<text x="230" y="402" text-anchor="middle" font-size="10" fill="#52525B" font-family="Nunito,sans-serif">GL code, cost centre, and payment terms applied automatically</text>
+<line x1="230" y1="412" x2="230" y2="426" stroke="#10B981" stroke-width="2" marker-end="url(#ahg)"/>
+
+<!-- Payment -->
+<rect x="30" y="428" width="400" height="40" rx="9" fill="white" stroke="#D4D4D8" stroke-width="1" filter="url(#sh)"/>
+<rect x="30" y="428" width="400" height="4" rx="2" fill="#111111"/>
+<text x="38" y="445" font-size="18">📅</text>
+<text x="230" y="446" text-anchor="middle" font-size="12" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">Payment scheduled</text>
+<text x="230" y="462" text-anchor="middle" font-size="10" fill="#52525B" font-family="Nunito,sans-serif">Optimal date selected · Early discount captured if available</text>
+<line x1="230" y1="468" x2="230" y2="482" stroke="#10B981" stroke-width="2" marker-end="url(#ahg)"/>
+
+<!-- Notify -->
+<rect x="30" y="484" width="400" height="40" rx="9" fill="white" stroke="#10B981" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="30" y="484" width="400" height="4" rx="2" fill="#10B981"/>
+<text x="38" y="501" font-size="18">✅</text>
+<text x="230" y="502" text-anchor="middle" font-size="12" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">Vendor notified</text>
+<text x="230" y="518" text-anchor="middle" font-size="10" fill="#52525B" font-family="Nunito,sans-serif">Confirmation + remittance advice sent automatically</text>
+
+<!-- ── RIGHT PATH: EXCEPTION ── -->
+<!-- Queue -->
+<rect x="470" y="366" width="400" height="46" rx="9" fill="white" stroke="#F59E0B" stroke-width="2" filter="url(#sh)"/>
+<rect x="470" y="366" width="400" height="4" rx="2" fill="#F59E0B"/>
+<text x="478" y="384" font-size="18">⚠️</text>
+<text x="670" y="385" text-anchor="middle" font-size="12" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">Exception flagged</text>
+<text x="670" y="402" text-anchor="middle" font-size="10" fill="#52525B" font-family="Nunito,sans-serif">Reason classified: mismatch, duplicate, or GSTIN issue</text>
+<line x1="670" y1="412" x2="670" y2="426" stroke="#F59E0B" stroke-width="2" marker-end="url(#aha)"/>
+
+<!-- AP Review -->
+<rect x="470" y="428" width="400" height="40" rx="9" fill="white" stroke="#EF4444" stroke-width="2" filter="url(#sh)"/>
+<rect x="470" y="428" width="400" height="4" rx="2" fill="#EF4444"/>
+<text x="478" y="445" font-size="18">👤</text>
+<text x="670" y="446" text-anchor="middle" font-size="12" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">AP team reviews</text>
+<text x="670" y="462" text-anchor="middle" font-size="10" fill="#52525B" font-family="Nunito,sans-serif">Agent pre-fills resolution form · 1-click approve or edit · SLA 4 hrs</text>
+<line x1="670" y1="468" x2="670" y2="482" stroke="#52525B" stroke-width="2" marker-end="url(#ahk)"/>
+
+<!-- Resolved -->
+<rect x="470" y="484" width="400" height="40" rx="9" fill="white" stroke="#D4D4D8" stroke-width="1" filter="url(#sh)"/>
+<rect x="470" y="484" width="400" height="4" rx="2" fill="#111111"/>
+<text x="478" y="501" font-size="18">↩️</text>
+<text x="670" y="502" text-anchor="middle" font-size="12" font-weight="700" fill="#111111" font-family="Nunito,sans-serif">Resolved and re-submitted</text>
+<text x="670" y="518" text-anchor="middle" font-size="10" fill="#52525B" font-family="Nunito,sans-serif">Loops back into auto-book · Exception logged for retraining</text>
+
+<!-- ── ROI STATS BAR ── -->
+<rect y="540" width="900" height="40" fill="#111111"/>
+<line x1="180" y1="544" x2="180" y2="576" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+<line x1="360" y1="544" x2="360" y2="576" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+<line x1="540" y1="544" x2="540" y2="576" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+<line x1="720" y1="544" x2="720" y2="576" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+<text x="90"  y="556" text-anchor="middle" font-size="13" font-weight="700" fill="#A8ABFF" font-family="Nunito,sans-serif">5M+</text>
+<text x="90"  y="572" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif">Invoices / year</text>
+<text x="270" y="556" text-anchor="middle" font-size="13" font-weight="700" fill="#A8ABFF" font-family="Nunito,sans-serif">80%</text>
+<text x="270" y="572" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif">Zero-touch rate</text>
+<text x="450" y="556" text-anchor="middle" font-size="13" font-weight="700" fill="#A8ABFF" font-family="Nunito,sans-serif">&lt; 90 sec</text>
+<text x="450" y="572" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif">End-to-end processing</text>
+<text x="630" y="556" text-anchor="middle" font-size="13" font-weight="700" fill="#A8ABFF" font-family="Nunito,sans-serif">Rs. 80–100 Cr</text>
+<text x="630" y="572" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif">Annual group savings</text>
+<text x="810" y="556" text-anchor="middle" font-size="13" font-weight="700" fill="#A8ABFF" font-family="Nunito,sans-serif">4 hrs</text>
+<text x="810" y="572" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.4)" font-family="Nunito,sans-serif">Exception SLA</text>
+
+</svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Placeholders for other agents -->
+  <div id="flow-ess" class="agent-flow-panel">
+    <div class="coming-flow"><div class="cf-icon">🧑‍💼</div><h3>Employee Self-Service Agent</h3><p>Flow diagram coming soon · Handles leave, payslips, policy Q&A, reimbursements across 140,000+ employees</p></div>
+  </div>
+  <div id="flow-contract" class="agent-flow-panel">
+    <div class="coming-flow"><div class="cf-icon">⚖️</div><h3>Contract Review &amp; Redlining Agent</h3><p>Flow diagram coming soon · Reviews 12,000+ contracts/yr · Flags risky clauses · Suggests redlines</p></div>
+  </div>
+  <div id="flow-churn" class="agent-flow-panel">
+    <div class="coming-flow"><div class="cf-icon">📡</div><h3>Churn Prediction Agent (Vi)</h3><p>Flow diagram coming soon · Daily churn scoring on 240M+ subscribers · Uplift modelling · Retention offer dispatch</p></div>
+  </div>
+  <div id="flow-nda" class="agent-flow-panel">
+    <div class="coming-flow"><div class="cf-icon">📄</div><h3>NDA Processing Agent</h3><p>Flow diagram coming soon · Standard NDAs: 5 days → 2 hours · Auto-draft, auto-review, DocuSign dispatch</p></div>
+  </div>
+  <div id="flow-gst" class="agent-flow-panel">
+    <div class="coming-flow"><div class="cf-icon">🧾</div><h3>GST / TDS Compliance Agent</h3><p>Flow diagram coming soon · Reconciles 100+ GSTINs vs GSTR-2A/2B · Recovers Rs. 30–50 Cr ITC mismatches</p></div>
+  </div>
+
+</div>
+</div>
+<div id="tab-vendor" class="tab-panel">
+<style>
+.tsu-col{background:#fff;border:1px solid var(--paper3);border-radius:var(--r2);overflow:hidden;}
+.tsu-hdr{padding:1.25rem;display:flex;align-items:flex-start;gap:12px;}
+.tsu-hdr-icon{width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;}
+.tsu-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 1.25rem 1.25rem;}
+.tsu-stat{background:var(--paper);border-radius:var(--r);padding:10px 12px;text-align:center;}
+.tsu-stat .sv{font-family:'Avenir Next','Avenir',Nunito,-apple-system,sans-serif;font-size:20px;font-weight:700;line-height:1;}
+.tsu-stat .sl{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;}
+.tsu-sect{padding:1rem 1.25rem;border-top:1px solid var(--paper2);}
+.tsu-sect .ts-label{font-size:10px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:0.07em;margin:0 0 10px;}
+.benefit-row{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;}
+.benefit-row:last-child{margin-bottom:0;}
+.benefit-row .bt{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.benefit-row .bd{font-size:11px;color:var(--ink3);line-height:1.5;margin:0;}
+.consid-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;}
+.consid-row:last-child{margin-bottom:0;}
+.consid-row p{font-size:11px;color:var(--ink3);margin:0;line-height:1.5;}
+.rec-box{background:#fff;border:2px solid var(--gold);border-radius:var(--r2);padding:1.25rem;margin-bottom:1rem;}
+.rec-tracks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0;}
+.rec-track{background:var(--paper);border-radius:var(--r);padding:12px 14px;}
+.gantt-section{margin-top:1rem;border-top:1px solid var(--paper3);padding-top:1rem;}
+.gantt-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink4);font-family:'DM Mono',monospace;margin-bottom:5px;padding-left:96px;}
+.gantt-row-tsu{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.gantt-row-tsu .grl{font-size:11px;font-weight:500;min-width:88px;text-align:right;}
+.gantt-row-tsu .grt{flex:1;height:22px;background:var(--paper2);border-radius:4px;position:relative;overflow:hidden;}
+.gantt-bar-tsu{position:absolute;height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;}
+.gantt-bar-tsu span{font-size:10px;font-weight:500;color:rgba(255,255,255,0.9);white-space:nowrap;}
+.suite-tag{font-size:11px;padding:3px 9px;border-radius:var(--r);margin:2px 2px 0 0;display:inline-block;}
+.bottom-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:1rem;}
+</style>
+
+<div style="padding:1.5rem;">
+
+  <p style="font-size:11px;font-weight:500;color:var(--gold);text-transform:uppercase;letter-spacing:0.09em;margin:0 0 3px;">Birla AI Labs — Technology Options</p>
+  <p class="sec-title" style="margin-bottom:3px;">AI agent deployment strategy</p>
+  <p class="sec-sub" style="margin-bottom:1.5rem;">Two options evaluated — Fast Lane vs Build Lane — with a recommended path forward</p>
+
+  <!-- TWO COLUMNS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+
+    <!-- FAST LANE -->
+    <div class="tsu-col">
+      <div class="tsu-hdr" style="background:var(--blue);">
+        <div class="tsu-hdr-icon" style="background:rgba(255,255,255,0.12);">⚡</div>
+        <div>
+          <p style="font-size:15px;font-weight:600;color:#fff;margin:0 0 4px;">Fast lane</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.55);margin:0;line-height:1.5;">Deploy agents on top of enterprise platforms ABG already licenses — Microsoft 365, SAP Build, AWS Bedrock</p>
+        </div>
+      </div>
+
+      <div class="tsu-stat-row">
+        <div class="tsu-stat"><div class="sv" style="color:var(--blue);">8–12 wks</div><div class="sl">First agent live</div></div>
+        <div class="tsu-stat"><div class="sv" style="color:var(--blue);">₹0</div><div class="sl">New licences needed</div></div>
+      </div>
+
+      <div class="tsu-sect">
+        <p class="ts-label">Benefits</p>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">Fastest path to board visibility</p><p class="bd">Working agents in 90 days — without waiting for a platform build. Critical for a company still hiring its team.</p></div>
+        </div>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">Uses licences ABG already pays for</p><p class="bd">Microsoft 365 (Copilot Studio), SAP BTP (Build Process Automation), AWS Bedrock. Zero incremental vendor cost in Year 1.</p></div>
+        </div>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">Lower talent dependency early</p><p class="bd">Agents can be built by product managers and business analysts while specialist ML engineers are still being hired.</p></div>
+        </div>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">Enterprise-grade reliability from day one</p><p class="bd">Microsoft and SAP SLAs, security certifications, and uptime commitments included. BAL team carries no maintenance burden.</p></div>
+        </div>
+      </div>
+
+      <div class="tsu-sect">
+        <p class="ts-label">Key considerations</p>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">Use case ceiling.</strong> No vendor platform supports industrial AI — kiln control, smelter optimisation, or credit scoring ML cannot be built here.</p>
+        </div>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">Vendor dependency.</strong> Platform pricing changes and API deprecations can break agents without notice. Once embedded, negotiating leverage reduces.</p>
+        </div>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">Data residency must be verified.</strong> M365 and SAP tenants must be confirmed in the India region before any sensitive HR or financial data is processed.</p>
+        </div>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">Limited IP ownership.</strong> Agents built inside Microsoft or SAP platforms carry their IP terms — not pure ABG assets that can be monetised externally.</p>
+        </div>
+      </div>
+
+      <div class="tsu-sect" style="border-bottom:none;">
+        <p class="ts-label">Best suited for</p>
+        <div>
+          <span class="suite-tag" style="background:var(--blue-l);color:var(--blue);">HR self-service</span>
+          <span class="suite-tag" style="background:var(--blue-l);color:var(--blue);">AP automation</span>
+          <span class="suite-tag" style="background:var(--blue-l);color:var(--blue);">NDA processing</span>
+          <span class="suite-tag" style="background:var(--blue-l);color:var(--blue);">Document intelligence</span>
+          <span class="suite-tag" style="background:var(--blue-l);color:var(--blue);">GST / TDS compliance</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILD LANE -->
+    <div class="tsu-col">
+      <div class="tsu-hdr" style="background:var(--teal);">
+        <div class="tsu-hdr-icon" style="background:rgba(255,255,255,0.12);">🏗</div>
+        <div>
+          <p style="font-size:15px;font-weight:600;color:#fff;margin:0 0 4px;">Build lane</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.55);margin:0;line-height:1.5;">Assemble a proprietary agent platform using open-source components — hosted entirely within ABG's cloud environment</p>
+        </div>
+      </div>
+
+      <div class="tsu-stat-row">
+        <div class="tsu-stat"><div class="sv" style="color:var(--teal);">Month 6–7</div><div class="sl">Platform ready</div></div>
+        <div class="tsu-stat"><div class="sv" style="color:var(--teal);">60%</div><div class="sl">Lower cost vs SaaS at scale</div></div>
+      </div>
+
+      <div class="tsu-sect">
+        <p class="ts-label">Benefits</p>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">Full data sovereignty</p><p class="bd">ABG's operational, financial, and subscriber data never leaves group infrastructure. Critical for RBI, IRDAI, and DPDP Act 2023 compliance across regulated entities.</p></div>
+        </div>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">No ceiling on complexity</p><p class="bd">Supports RL kiln control, smelter AI, custom credit models, and any use case requiring purpose-built ML — none deliverable on any vendor platform.</p></div>
+        </div>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">100% ABG IP ownership</p><p class="bd">Every model, agent, and dataset is a proprietary ABG asset. Positions BAL for potential external monetisation and licencing in Year 4–5.</p></div>
+        </div>
+        <div class="benefit-row">
+          <span style="color:var(--teal);font-size:15px;flex-shrink:0;margin-top:1px;">✓</span>
+          <div><p class="bt">Superior long-term economics</p><p class="bd">₹6–8 Cr/yr at group scale vs ₹15–25 Cr/yr for equivalent SaaS. Break-even at 18–24 months, significant savings beyond that point.</p></div>
+        </div>
+      </div>
+
+      <div class="tsu-sect">
+        <p class="ts-label">Key considerations</p>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">Longer setup time.</strong> Platform assembly takes 10–12 weeks with a dedicated team. No agents deploy on this stack before Month 6–7, requiring board patience.</p>
+        </div>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">Specialist talent required.</strong> Needs ML engineers, MLOps specialists, and platform engineers — among the hardest profiles to hire and retain in India today.</p>
+        </div>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">BAL owns the maintenance.</strong> Uptime, security patches, and platform upgrades are BAL's responsibility. Requires a dedicated platform engineering function from Year 1.</p>
+        </div>
+        <div class="consid-row">
+          <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;">⚠</span>
+          <p><strong style="color:var(--ink);">Higher upfront investment.</strong> ₹8–12 Cr platform build before the first vertical agent deploys. Board must accept an investment phase before seeing complex AI outcomes.</p>
+        </div>
+      </div>
+
+      <div class="tsu-sect" style="border-bottom:none;">
+        <p class="ts-label">Best suited for</p>
+        <div>
+          <span class="suite-tag" style="background:var(--teal-l);color:var(--teal);">Kiln &amp; smelter AI</span>
+          <span class="suite-tag" style="background:var(--teal-l);color:var(--teal);">Credit underwriting</span>
+          <span class="suite-tag" style="background:var(--teal-l);color:var(--teal);">Fraud detection</span>
+          <span class="suite-tag" style="background:var(--teal-l);color:var(--teal);">Churn prediction</span>
+          <span class="suite-tag" style="background:var(--teal-l);color:var(--teal);">Demand forecasting</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RECOMMENDATION -->
+  <div class="rec-box">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+      <span style="font-size:18px;">🏆</span>
+      <p style="font-size:15px;font-weight:600;color:var(--ink);margin:0;">Recommendation: run both in parallel — dual-track strategy</p>
+    </div>
+    <p style="font-size:13px;color:var(--ink3);margin:0 0 1rem;line-height:1.7;">Neither option alone is sufficient. Fast Lane gives the board visible results in 90 days. Build Lane delivers the transformational AI that justifies the programme's existence. The two tracks are not alternatives — they serve different use cases and must run simultaneously from Month 1.</p>
+
+    <div class="rec-tracks">
+      <div class="rec-track" style="border-left:3px solid var(--blue);">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+          <span style="font-size:14px;">⚡</span>
+          <span style="font-size:12px;font-weight:600;color:var(--blue);">Fast lane — Month 1 to 9</span>
+        </div>
+        <p style="font-size:11px;color:var(--ink3);margin:0;line-height:1.55;">Deploy 8 horizontal agents (HR, Finance, Legal) on M365 + SAP platforms already licensed. First agent live in 8–12 weeks. Board sees measurable P&amp;L impact at the Month 9 gate. Zero new vendor cost.</p>
+      </div>
+      <div class="rec-track" style="border-left:3px solid var(--teal);">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+          <span style="font-size:14px;">🏗</span>
+          <span style="font-size:12px;font-weight:600;color:var(--teal);">Build lane — Month 3 to 36</span>
+        </div>
+        <p style="font-size:11px;color:var(--ink3);margin:0;line-height:1.55;">3-person platform team assembles open-source stack (LangGraph + Claude API + Pinecone) by Month 6–7. All vertical agents — kiln AI, smelter AI, credit AI, churn AI — built on this from Month 8 onwards.</p>
+      </div>
+    </div>
+
+    <div class="gantt-section">
+      <p style="font-size:11px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:0.07em;margin:0 0 10px;">Deployment timeline — 36 months</p>
+      <div class="gantt-labels">
+        <span>M1</span><span>M3</span><span>M6</span><span>M9</span><span>M12</span><span>M18</span><span>M24</span><span>M36</span>
+      </div>
+      <div class="gantt-row-tsu">
+        <span class="grl" style="color:var(--blue);">Fast lane</span>
+        <div class="grt">
+          <div class="gantt-bar-tsu" style="left:0;width:25%;background:var(--blue);">
+            <span>8 agents live by Month 9</span>
+          </div>
+        </div>
+      </div>
+      <div class="gantt-row-tsu">
+        <span class="grl" style="color:var(--ink4);">Platform build</span>
+        <div class="grt">
+          <div class="gantt-bar-tsu" style="left:8%;width:11%;background:var(--paper3);border-radius:4px;display:flex;align-items:center;justify-content:center;">
+            <span style="color:var(--ink4);font-size:9px;">build</span>
+          </div>
+        </div>
+      </div>
+      <div class="gantt-row-tsu">
+        <span class="grl" style="color:var(--teal);">Build lane</span>
+        <div class="grt">
+          <div class="gantt-bar-tsu" style="left:19%;width:81%;background:var(--teal);">
+            <span>Vertical agents — kiln, smelter, credit, churn, demand AI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM STATS -->
+  <div class="bottom-stats">
+    <div class="mc"><p class="lbl">First agent live (Fast Lane)</p><p class="val" style="font-size:18px;color:var(--blue);">8–12 weeks</p></div>
+    <div class="mc"><p class="lbl">Build Lane platform cost</p><p class="val" style="font-size:18px;color:var(--teal);">₹8–12 Cr</p></div>
+    <div class="mc"><p class="lbl">Combined payback (dual-track)</p><p class="val" style="font-size:18px;color:var(--teal);">~8 months</p></div>
+  </div>
+
+  <div class="footnote">Open-source stack: LangGraph (orchestration) · Anthropic Claude API via AWS Bedrock (LLM) · Pinecone (vector DB) · Langfuse (observability) · FastAPI on EKS (serving). Fast Lane platforms: Microsoft Copilot Studio (M365 E3/E5 included) · SAP Build Process Automation (SAP BTP included) · AWS Bedrock Agents. Data residency: all ABG data processed in AWS Mumbai (AP-South-1) and Azure Central India regions only.</div>
+</div>
+</div>
+
+<script>
+/* ── TAB + SUB NAV ── */
+function switchTab(n,b){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.getElementById('tab-'+n).classList.add('active');b.classList.add('active');if(n==='companies'&&!window._c){buildCharts();window._c=true;}}
+function showSub(id,b){document.querySelectorAll('.sub-section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.sub-btn').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');b.classList.add('active');if(id==='s2'&&!window._t){buildTable();window._t=true;}}
+
+/* ── SCROLL REVEAL ── */
+const _obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');_obs.unobserve(e.target);}});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>_obs.observe(el));
+
+/* ── TAB 1 CHARTS ── */
+function buildCharts(){
+  const tc='#9E9890',gc='rgba(0,0,0,0.05)';
+  new Chart(document.getElementById('revChart'),{type:'bar',data:{labels:['Hindalco','Novelis','UltraTech','Grasim SA','Vi','AB Capital*','Birla Carbon*','ABLBL','ABFRL','Birla Opus*'],datasets:[{data:[238496,142000,74936,44267,43456,34000,16000,7619,7355,2000],backgroundColor:['#8B1A1A','#A52020','#1A3A6B','#1A6B5A','#4A1A6B','#C84800','#2B5A2B','#6B4A2B','#2B4A6B','#8B6B1A'],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' ₹'+c.raw.toLocaleString('en-IN')+' Cr'}}},scales:{x:{ticks:{color:tc,font:{size:10},maxRotation:35},grid:{display:false}},y:{ticks:{color:tc,font:{size:10},callback:v=>v>=100000?(v/100000).toFixed(1)+'L':Math.round(v/1000)+'K'},grid:{color:gc}}}}});
+  new Chart(document.getElementById('sectorPie'),{type:'doughnut',data:{labels:['Metals','Cement','Diversified','Telecom','Fin.Services','Carbon Black','Fashion','Paints','Others'],datasets:[{data:[238496,74936,44267,43456,34000,16000,14974,2000,3200],backgroundColor:['#8B1A1A','#1A3A6B','#1A6B5A','#4A1A6B','#C84800','#2B5A2B','#6B4A2B','#8B6B1A','#9E9890'],borderWidth:2,borderColor:'#F7F4EF'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': ₹'+c.raw.toLocaleString('en-IN')+' Cr'}}}}});
+}
+
+/* ══════════════════════════════════════════
+   COMPANY SCORING TABLE
+══════════════════════════════════════════ */
+const COLS=[
+  {key:'revenue',label:'Revenue Impact',weight:0.10,opts:[{v:1,l:'Low — <₹50 Cr/yr'},{v:2,l:'Medium — ₹50–200 Cr'},{v:4,l:'High — ₹200–500 Cr'},{v:5,l:'Very High — >₹500 Cr'}]},
+  {key:'data',label:'Data Readiness',weight:0.15,opts:[{v:1,l:'Poor — Unstructured/Siloed'},{v:2,l:'Fair — Partially digitised'},{v:4,l:'Good — Structured & clean'},{v:5,l:'Excellent — Real-time API-ready'}]},
+  {key:'leadership',label:'Leadership Buy-in',weight:0.20,opts:[{v:1,l:'Low — Skeptical'},{v:2,l:'Medium — Cautious'},{v:4,l:'High — Supportive'},{v:5,l:'Very High — Full sponsorship'}]},
+  {key:'payback',label:'Time to ROI',weight:0.12,opts:[{v:1,l:'> 24 months'},{v:2,l:'12–24 months'},{v:4,l:'6–12 months'},{v:5,l:'< 6 months'}]},
+  {key:'breadth',label:'Use Case Breadth',weight:0.10,opts:[{v:1,l:'1–3 use cases'},{v:3,l:'4–6 use cases'},{v:4,l:'7–10 use cases'},{v:5,l:'10+ use cases'}]},
+  {key:'complexity',label:'Impl. Complexity ↓',weight:0.10,opts:[{v:1,l:'Very High — Deep OT/Physics'},{v:2,l:'High — Complex integrations'},{v:4,l:'Medium — Standard ML+APIs'},{v:5,l:'Low — Plug-and-play agents'}]},
+  {key:'regulatory',label:'Regulatory Burden ↓',weight:0.08,opts:[{v:1,l:'Very High — RBI/IRDAI'},{v:2,l:'High — TRAI/SEBI'},{v:4,l:'Medium — Env/Quality regs'},{v:5,l:'Low — No sector regulator'}]},
+  {key:'infra',label:'IT/OT Infrastructure',weight:0.05,opts:[{v:1,l:'Legacy — Pre-2010'},{v:2,l:'Moderate — Mixed'},{v:4,l:'Modern — Cloud-enabled'},{v:5,l:'Advanced — API-first'}]},
+  {key:'change',label:'Change Mgmt Risk ↓',weight:0.05,opts:[{v:1,l:'Very High — Strong resistance'},{v:2,l:'High — Retraining needed'},{v:4,l:'Medium — Some resistance'},{v:5,l:'Low — Change-ready culture'}]},
+  {key:'replicability',label:'Replicability',weight:0.05,opts:[{v:1,l:'None — Unique'},{v:2,l:'Low — Partial transfer'},{v:4,l:'Medium — Some reuse'},{v:5,l:'High — Direct export'}]}
+];
+
+const DEFAULTS={
+  ultratech:{name:'UltraTech Cement',sector:'Cement',color:'#1A3A6B',revenue:5,data:4,leadership:5,payback:4,breadth:4,complexity:4,regulatory:5,infra:2,change:4,replicability:5},
+  hindalco:{name:'Hindalco Industries',sector:'Metals & Mining',color:'#8B1A1A',revenue:5,data:4,leadership:2,payback:2,breadth:5,complexity:1,regulatory:5,infra:2,change:2,replicability:4},
+  abcapital:{name:'Aditya Birla Capital',sector:'Financial Services',color:'#C84800',revenue:4,data:5,leadership:4,payback:4,breadth:4,complexity:2,regulatory:1,infra:4,change:4,replicability:4},
+  abfrl:{name:'ABFRL',sector:'Fashion & Retail',color:'#2B4A6B',revenue:2,data:4,leadership:4,payback:4,breadth:3,complexity:5,regulatory:5,infra:4,change:5,replicability:4},
+  vi:{name:'Vodafone Idea',sector:'Telecom',color:'#4A1A6B',revenue:4,data:5,leadership:2,payback:4,breadth:3,complexity:2,regulatory:2,infra:4,change:2,replicability:2},
+  grasim:{name:'Grasim Industries',sector:'Diversified',color:'#1A6B5A',revenue:2,data:2,leadership:5,payback:2,breadth:3,complexity:4,regulatory:5,infra:2,change:4,replicability:4},
+  birlacarbon:{name:'Birla Carbon',sector:'Carbon Black',color:'#2B5A2B',revenue:2,data:2,leadership:2,payback:2,breadth:1,complexity:2,regulatory:5,infra:1,change:2,replicability:2},
+  birlaopus:{name:'Birla Opus',sector:'Paints (New venture)',color:'#8B6B1A',revenue:2,data:2,leadership:5,payback:4,breadth:3,complexity:5,regulatory:5,infra:4,change:5,replicability:2}
+};
+
+/* ══════════════════════════════════════════
+   AI PLANS DATA — per company
+══════════════════════════════════════════ */
+const CO_AI_PLANS={
+  ultratech:{
+    summary:'India\'s largest cement producer · Energy AI alone = ₹400–500 Cr/yr · Highest ROI per AI rupee in the group',
+    totalValue:'₹980–1,360 Cr/yr',
+    usecases:[
+      {rank:1,name:'Logistics Route Optimisation',value:'₹120–180 Cr',cx:'low',s:1,e:3,note:'GPS + SAP TM data already flowing. VRP is a solved problem. Fastest vertical ROI in this company.',
+       agents:[{n:'Route Optimisation Agent',d:'VRP solver + ML demand windows. Optimises 2,000+ trucks daily across 100K+ dealer points. 8% transport cost reduction.',t:'6 wks'},{n:'Delivery Performance Agent',d:'Tracks OTIF by route and driver. Flags underperforming routes for rebalancing.',t:'3 wks'}]},
+      {rank:2,name:'Predictive Maintenance',value:'₹180–250 Cr',cx:'low',s:2,e:5,note:'Vibration and thermal sensor data exists in SCADA. Alert-only mode — no process changes for v1.',
+       agents:[{n:'Equipment Health Monitor Agent',d:'Isolation Forest + LSTM on vibration, thermal, oil sensors. Detects failure signatures 72 hours ahead.',t:'6 wks'},{n:'Maintenance Work Order Agent',d:'Auto-creates SAP PM work orders at 80%+ anomaly confidence. Routes to supervisor via Teams.',t:'4 wks'}]},
+      {rank:3,name:'Dealer Demand Forecasting',value:'₹50–80 Cr',cx:'medium',s:2,e:5,note:'3+ years dealer POS data available. Reduces stockouts across 100,000+ dealer network.',
+       agents:[{n:'Dealer Demand Forecast Agent',d:'Temporal Fusion Transformer at SKU × dealer × region level. 13-week rolling horizon.',t:'8 wks'},{n:'Inventory Reorder Agent',d:'Triggers SAP MM replenishment when projected stock < safety stock. WhatsApp dealer notification.',t:'4 wks'}]},
+      {rank:4,name:'Energy Management AI',value:'₹100–150 Cr',cx:'medium',s:3,e:8,note:'Coal/petcoke blend optimisation + kiln heat balance. Real-time setpoint recommendations to operators.',
+       agents:[{n:'Fuel Blend Optimisation Agent',d:'ML on coal quality, calorific value, and price. Recommends optimal blend to reduce specific heat consumption.',t:'8 wks'},{n:'Kiln Heat Balance Agent',d:'Predicts heat consumption 30 min ahead. Recommends secondary air and coal feed adjustments.',t:'8 wks'}]},
+      {rank:5,name:'Quality Prediction AI',value:'₹80–120 Cr',cx:'medium',s:3,e:7,note:'Computer vision on clinker output predicts grade deviation before QC lab result arrives.',
+       agents:[{n:'Clinker Quality Prediction Agent',d:'CNN on cooler camera feeds. Predicts free lime, LSF, silica modulus 20 min before lab confirmation.',t:'10 wks'},{n:'QC Alert & Setpoint Agent',d:'Flags deviations to kiln operator with recommended corrective action. Human approval before any change.',t:'4 wks'}]}]
+  },
+  hindalco:{
+    summary:'World\'s largest aluminium company by revenue · Smelter AI = ₹700–900 Cr/yr · Complex but transformational',
+    totalValue:'₹1,350–1,650 Cr/yr',
+    usecases:[
+      {rank:1,name:'Predictive Maintenance',value:'₹100–150 Cr',cx:'low',s:2,e:5,note:'Equipment sensors exist on potlines and rotary equipment. Fastest deployment in this company.',
+       agents:[{n:'Potline Equipment Health Agent',d:'Anomaly detection on rectifiers, transformers, anode beam equipment. 72-hour advance warnings.',t:'6 wks'},{n:'Maintenance Dispatch Agent',d:'SAP PM work order creation + maintenance team routing based on urgency and availability.',t:'4 wks'}]},
+      {rank:2,name:'Novelis Scrap Alloy Optimisation',value:'₹400–600 Cr',cx:'medium',s:3,e:8,note:'Novelis processes 3.4M tonnes recycled aluminium. AI blending = 4–5% feedstock cost reduction on $12B+ spend.',
+       agents:[{n:'Scrap Blend Optimisation Agent',d:'MILP + ML for scrap grade pricing. Recommends optimal charge recipe to hit alloy spec at minimum cost.',t:'10 wks'},{n:'Alloy Recipe Agent',d:'Generates furnace charge sheet from scrap inventory, target chemistry, and melting constraints. SAP MM integrated.',t:'6 wks'}]},
+      {rank:3,name:'Rolling Mill Quality AI',value:'₹150–200 Cr',cx:'medium',s:4,e:9,note:'Computer vision on hot/cold rolling detects surface defects in real-time at 200m/min strip speed.',
+       agents:[{n:'Surface Defect Detection Agent',d:'CNN trained on 500K+ labelled images. Detects pits, scratches, roll marks in real-time. 95% detection rate.',t:'12 wks'},{n:'Roll Change Trigger Agent',d:'Initiates roll change recommendation when defect rate crosses threshold. Prevents downstream claims.',t:'4 wks'}]},
+      {rank:4,name:'Copper Process Optimisation',value:'₹80–120 Cr',cx:'medium',s:4,e:8,note:'World-class copper smelter at Dahej. Process AI reduces slag losses and improves metal recovery.',
+       agents:[{n:'Smelter Process Agent',d:'ML on furnace temperature, bath chemistry, oxygen enrichment. Recommends setpoints for maximum copper recovery.',t:'10 wks'},{n:'Anode Quality Agent',d:'Predicts anode composition from real-time sensors. Reduces refinery rejections by 20%.',t:'8 wks'}]},
+      {rank:5,name:'Aluminium Smelter AI (RL)',value:'₹700–900 Cr',cx:'high',s:8,e:22,note:'Largest AI opportunity in ABG. Electrochemical process optimisation via RL. 2–3% energy efficiency gain.',
+       agents:[{n:'Anode Effect Prediction Agent',d:'LSTM predicts dangerous voltage spikes 30 min ahead. 50% reduction in anode effect frequency.',t:'12 wks'},{n:'Bath Chemistry Agent',d:'Bayesian optimisation for AlF₃ addition timing. Maintains optimal bath ratio continuously.',t:'10 wks'},{n:'Pot Digital Twin Agent',d:'PINN replicating electrochemical pot dynamics. Training environment for RL agent.',t:'20 wks'},{n:'RL Pot Control Agent',d:'Energy-optimal pot operation via RL. Trained in digital twin. Human override mandatory.',t:'20 wks'}]}
+    ]
+  },
+  abcapital:{
+    summary:'₹1,57,404 Cr lending book · Excellent data readiness · Regulatory complexity is the primary constraint',
+    totalValue:'₹580–810 Cr/yr',
+    usecases:[
+      {rank:1,name:'Customer Service AI',value:'₹60–80 Cr',cx:'low',s:1,e:3,note:'LLM-powered IVR/chat. No RBI approval required. Fastest FS deployment — query deflection only.',
+       agents:[{n:'IVR Deflection Agent',d:'LLM handles loan status, EMI queries, statement requests across ABFL, ABHI, ABGI. 40% call deflection.',t:'6 wks'},{n:'Chat Resolution Agent',d:'Handles 200+ FAQ intent types. Escalates to human with full context summary.',t:'5 wks'}]},
+      {rank:2,name:'Document Processing AI',value:'₹40–60 Cr',cx:'low',s:1,e:3,note:'KYC, loan applications, insurance claims — massive volume, fully digital. Zero regulatory constraint.',
+       agents:[{n:'KYC Document Agent',d:'Extracts Aadhaar, PAN, income proof via Textract + Claude. 90% auto-verification. Flags mismatches.',t:'5 wks'},{n:'Loan Application Agent',d:'Extracts employment, income, liability data from uploaded docs. Pre-fills underwriting model inputs.',t:'6 wks'}]},
+      {rank:3,name:'Insurance Fraud Detection',value:'₹120–180 Cr',cx:'medium',s:3,e:8,note:'Graph AI on ABHI/ABGI claims networks. IRDAI guidelines manageable. High ROI.',
+       agents:[{n:'Claims Fraud Scoring Agent',d:'XGBoost on 50+ claim features. Scores every claim at submission. Flags top 5% for investigation.',t:'8 wks'},{n:'Graph Fraud Ring Detector',d:'GNN on provider × policyholder × doctor networks. Detects organised rings missed by individual scoring.',t:'10 wks'}]},
+      {rank:4,name:'Wealth Advisory AI',value:'₹100–150 Cr',cx:'medium',s:4,e:8,note:'SEBI guidelines navigable. LLM-powered portfolio nudges → reduced redemptions → AUM retention.',
+       agents:[{n:'Portfolio Nudge Agent',d:'Personalised SIP step-up and fund switch recommendations based on goal progress and market signals.',t:'8 wks'},{n:'Investor Communication Agent',d:'LLM explains portfolio performance in plain language. Reduces redemptions during market volatility.',t:'6 wks'}]},
+      {rank:5,name:'Collections Intelligence',value:'₹50–80 Cr',cx:'medium',s:4,e:8,note:'Predict delinquency risk early and route collections strategy by customer segment.',
+       agents:[{n:'Delinquency Prediction Agent',d:'XGBoost on payment behaviour, UPI flows, bureau signals. Flags accounts 60 days before NPA formation.',t:'8 wks'},{n:'Collections Strategy Agent',d:'Selects optimal channel (call, SMS, IVR, field) and timing per customer risk segment.',t:'6 wks'}]},
+      {rank:6,name:'AI Credit Underwriting',value:'₹250–350 Cr',cx:'high',s:6,e:16,note:'Highest ROI FS use case. RBI MRM Master Direction approval adds timeline. Worth the investment.',
+       agents:[{n:'Bank Statement Parser Agent',d:'Claude API extracts income, EMIs, irregular flows from 12-month PDFs. Creates structured income signals.',t:'6 wks'},{n:'ML Underwriting Agent',d:'XGBoost on 200+ features. Shadow-deployed against scorecard. RBI validation required before promotion.',t:'12 wks'},{n:'Credit Explainability Agent',d:'SHAP + NLG generates plain-language reason codes. Mandatory under RBI MRM guidelines.',t:'6 wks'}]}
+    ]
+  },
+  abfrl:{
+    summary:'14% revenue growth FY25 · Easiest vertical AI in the group · Data-rich, low complexity, fast ROI',
+    totalValue:'₹390–570 Cr/yr',
+    usecases:[
+      {rank:1,name:'Trend Intelligence AI',value:'₹20–40 Cr',cx:'low',s:1,e:3,note:'Social + search signals predict trends 6 weeks ahead. No enterprise integration needed for v1.',
+       agents:[{n:'Social Trend Monitor Agent',d:'NLP + image classification on Instagram, Pinterest. Tracks colour, silhouette, style trend signals daily.',t:'5 wks'},{n:'Buying Recommendation Agent',d:'Translates trend signals into actionable buying recommendations for merchandising team.',t:'4 wks'}]},
+      {rank:2,name:'Demand Forecasting & Markdown AI',value:'₹200–280 Cr',cx:'low',s:2,e:5,note:'3+ years POS data across 3,000+ stores. Two fashion seasons = board-level proof.',
+       agents:[{n:'SKU Demand Forecast Agent',d:'Temporal Fusion Transformer at SKU × store × week. 13-week horizon. 25% WMAPE improvement.',t:'8 wks'},{n:'Markdown Optimisation Agent',d:'Dynamic pricing — optimal markdown depth per SKU. Reduces average markdown 35% → 28%.',t:'6 wks'}]},
+      {rank:3,name:'Personalisation Engine',value:'₹100–160 Cr',cx:'low',s:2,e:5,note:'15M+ registered users across apps. Two-tower CF model is well-proven. 12–15% conversion uplift.',
+       agents:[{n:'Product Recommendation Agent',d:'Two-tower neural net (user × item embeddings). Top-K recommendations on PDP, homepage, cart.',t:'7 wks'},{n:'Outfit Styling Agent',d:'LLM generates outfit combinations based on history. Reduces returns by 8%.',t:'6 wks'}]},
+      {rank:4,name:'Returns Reduction AI',value:'₹30–50 Cr',cx:'low',s:2,e:4,note:'Online returns at 18–22% in fashion. Size AI reduces returns immediately.',
+       agents:[{n:'Return Prediction Agent',d:'Scores every order for return probability. Triggers verification call for high-risk orders >₹2,000.',t:'5 wks'},{n:'Size Recommendation Agent',d:'Fit prediction using body measurements + history. Reduces size-related returns 35%.',t:'6 wks'}]},
+      {rank:5,name:'Store Operations AI',value:'₹60–80 Cr',cx:'medium',s:3,e:7,note:'Computer vision + AI replenishment improves same-store productivity.',
+       agents:[{n:'Store Traffic & Conversion Agent',d:'Anonymised CV tracks entry, dwell zones, fitting room conversion. Optimises floor layout.',t:'10 wks'},{n:'Replenishment Agent',d:'Predicts shelf depletion 4 hrs ahead. Triggers stockroom pick list automatically.',t:'6 wks'}]}
+    ]
+  },
+  vi:{
+    summary:'240M+ subscribers · Gold-standard CDR data · Leadership buy-in is the primary risk',
+    totalValue:'₹780–1,050 Cr/yr',
+    usecases:[
+      {rank:1,name:'Customer Experience AI',value:'₹80–120 Cr',cx:'low',s:1,e:3,note:'LLM chatbot for Vi App + IVR. No TRAI constraint. 40% query deflection from contact centre.',
+       agents:[{n:'Vi App Chatbot Agent',d:'LLM handles recharge, plan, billing queries in Vi App and WhatsApp.',t:'6 wks'},{n:'IVR Deflection Agent',d:'Natural language IVR replaces DTMF menu. Resolves 40% of inbound without agent handoff.',t:'5 wks'}]},
+      {rank:2,name:'ARPU Uplift AI',value:'₹50–80 Cr',cx:'low',s:2,e:4,note:'Subscriber data enables personalised plan upgrade recommendations. Fast ROI.',
+       agents:[{n:'Plan Upgrade Recommendation Agent',d:'Recommends upgrades based on usage patterns near data/voice limits.',t:'5 wks'},{n:'Data Pack Upsell Agent',d:'Real-time offer at 80% data usage. Personalised pack based on consumption history.',t:'4 wks'}]},
+      {rank:3,name:'Churn Prediction & Retention AI',value:'₹400–500 Cr',cx:'medium',s:2,e:5,note:'CDR data is excellent. LightGBM churn scoring proven in telecom. Highest ROI use case.',
+       agents:[{n:'Churn Risk Scoring Agent',d:'LightGBM on 150+ CDR features. Daily score for every active subscriber. Retrained weekly.',t:'8 wks'},{n:'Uplift Modelling Agent',d:'T-learner identifies which high-risk subscribers respond to retention. Prevents ₹200 Cr wasted discounts.',t:'6 wks'},{n:'Retention Offer Agent',d:'Selects optimal offer per segment. Sends via Vi app, SMS, or outbound call.',t:'5 wks'}]},
+      {rank:4,name:'RAN Optimisation AI',value:'₹250–350 Cr',cx:'high',s:5,e:14,note:'8% network capex efficiency. Complex but enormous value. Requires deep RAN expertise.',
+       agents:[{n:'Network KPI Monitor Agent',d:'Continuous monitoring of RSRP, SINR, handover failure rates. Anomaly detection and alerting.',t:'8 wks'},{n:'RAN Parameter Agent',d:'ML recommends tilt, power, handover threshold adjustments. Automates drive test planning.',t:'12 wks'},{n:'Capacity Forecast Agent',d:'Predicts cell-level congestion 6 weeks ahead. Enables surgical capex vs blanket rollout.',t:'10 wks'}]}
+    ]
+  },
+  grasim:{
+    summary:'Flagship ABG company · VSF + Chemicals + Birla Opus · Very high leadership buy-in, data quality needs improvement',
+    totalValue:'₹210–330 Cr/yr',
+    usecases:[
+      {rank:1,name:'Birla Opus Demand & Dealer AI',value:'₹60–90 Cr',cx:'low',s:1,e:4,note:'New paints venture with modern tech stack. Demand forecasting is an early must-win.',
+       agents:[{n:'Paint Demand Forecast Agent',d:'SKU forecast at depot × dealer level. Prevents stockouts for fast-moving SKUs in launch year.',t:'7 wks'},{n:'Dealer Performance Agent',d:'Scores dealer health by offtake, returns, payment. Flags at-risk dealers for intervention.',t:'5 wks'}]},
+      {rank:2,name:'VSF Process Optimisation',value:'₹80–120 Cr',cx:'medium',s:3,e:8,note:'World\'s largest VSF producer. Process yield and quality improvements have significant margin impact.',
+       agents:[{n:'Viscose Quality Prediction Agent',d:'ML on spinning bath composition + temperature. Predicts tenacity and elongation before QC.',t:'10 wks'},{n:'Bath Optimisation Agent',d:'Recommends caustic soda and viscose concentration to maximise yield and minimise waste.',t:'8 wks'}]},
+      {rank:3,name:'Chemicals Process AI',value:'₹40–70 Cr',cx:'medium',s:3,e:7,note:'Chlor-alkali process optimisation. Energy is 35% of costs.',
+       agents:[{n:'Electrolyser Efficiency Agent',d:'ML on cell voltage, temperature, brine quality. Recommends current density for efficiency.',t:'8 wks'},{n:'Caustic Soda Quality Agent',d:'Predicts product concentration and purity. Reduces off-spec production.',t:'6 wks'}]},
+      {rank:4,name:'Group Procurement AI',value:'₹30–50 Cr',cx:'low',s:2,e:5,note:'Grasim coordinates significant group procurement. Quick analytics win.',
+       agents:[{n:'Spend Analytics Agent',d:'Categorises SAP POs, identifies maverick spend, benchmarks prices vs market.',t:'6 wks'},{n:'Supplier Risk Agent',d:'Scores 500+ suppliers on financial health, concentration risk, ESG compliance.',t:'5 wks'}]}
+    ]
+  },
+  birlacarbon:{
+    summary:'World\'s largest carbon black producer · Legacy IT is the primary challenge · Limited AI use case breadth',
+    totalValue:'₹75–120 Cr/yr',
+    usecases:[
+      {rank:1,name:'Predictive Maintenance',value:'₹15–25 Cr',cx:'low',s:2,e:5,note:'Reactor and equipment sensors exist. Proven technology. Fastest path to ROI.',
+       agents:[{n:'Reactor Health Monitor Agent',d:'Anomaly detection on temperature, pressure, feed gas flow. 48-hour advance warning.',t:'6 wks'},{n:'Work Order Agent',d:'Auto-creates maintenance tasks. Routes by urgency and technician availability.',t:'4 wks'}]},
+      {rank:2,name:'Carbon Black Process AI',value:'₹40–60 Cr',cx:'medium',s:3,e:8,note:'Oil furnace process optimisation. Feed oil quality variability is the key AI challenge.',
+       agents:[{n:'Feed Oil Characterisation Agent',d:'ML predicts carbon black yield and grade from feed oil quality analysis.',t:'8 wks'},{n:'Reactor Setpoint Agent',d:'Recommends air-to-oil ratio, quench water, and temperature for target product grade.',t:'8 wks'}]},
+      {rank:3,name:'Energy Optimisation',value:'₹20–35 Cr',cx:'medium',s:4,e:8,note:'Tail gas energy recovery optimisation offers meaningful efficiency gains.',
+       agents:[{n:'Tail Gas Recovery Agent',d:'Optimises tail gas combustion for steam generation. ML on furnace load and fuel quality.',t:'8 wks'},{n:'Plant Energy Balance Agent',d:'Real-time energy balance across plant. Identifies waste streams and inefficiency patterns.',t:'6 wks'}]}
+    ]
+  },
+  birlaopus:{
+    summary:'India\'s #3 decorative paints brand within 6 months of launch · Modern tech stack · Leadership fully committed',
+    totalValue:'₹150–230 Cr/yr',
+    usecases:[
+      {rank:1,name:'Painter & Customer Service AI',value:'₹20–40 Cr',cx:'low',s:1,e:3,note:'WhatsApp-first painter community of 50,000+. Chatbot handles application queries and complaints.',
+       agents:[{n:'Paint Advisor Agent',d:'LLM chatbot for painters — surface prep, product selection, dilution ratios, troubleshooting.',t:'5 wks'},{n:'Complaint Resolution Agent',d:'Routes product quality complaints with auto-populated claim form. Tracks resolution SLA.',t:'4 wks'}]},
+      {rank:2,name:'Dealer Intelligence AI',value:'₹40–60 Cr',cx:'low',s:1,e:3,note:'10,000+ dealer network growing rapidly. AI identifies high-potential dealers and prevents churn.',
+       agents:[{n:'Dealer Engagement Agent',d:'Scores 10,000+ dealers on offtake trend, order frequency, product mix.',t:'5 wks'},{n:'Territory Optimisation Agent',d:'Recommends optimal dealer density per geography. Identifies white-space markets.',t:'4 wks'}]},
+      {rank:3,name:'Demand Forecasting & Supply Chain',value:'₹60–90 Cr',cx:'low',s:1,e:4,note:'Fast-changing demand signals in launch year. Forecasting AI prevents stockouts.',
+       agents:[{n:'Paint SKU Forecast Agent',d:'ML on weekly offtake at depot × SKU. Factors in promotional calendar and regional trends.',t:'7 wks'},{n:'Distribution Planning Agent',d:'Optimises dispatch from 6 plants to regional depots. Minimises transit time and stockout risk.',t:'5 wks'}]},
+      {rank:4,name:'Colour AI & Recommendation',value:'₹30–50 Cr',cx:'low',s:2,e:5,note:'Colour selection is the #1 conversion barrier. AI recommendation reduces sales cycle.',
+       agents:[{n:'Colour Recommendation Agent',d:'LLM + image AI recommends paint colours from room photos or mood descriptions.',t:'8 wks'},{n:'Colour Trend Prediction Agent',d:'Monitors global design trends, Instagram, architectural publications for 18-month range planning.',t:'6 wks'}]}
+    ]
+  }
+};;
+// Timeline adjustment: +50% — new entity, team formation & technology incubation time
+(function(){
+  const F=1.5;
+  Object.values(CO_AI_PLANS).forEach(function(co){
+    co.usecases.forEach(function(uc){
+      uc.s=Math.max(1,Math.round(uc.s*F));
+      uc.e=Math.round(uc.e*F);
+      uc.agents.forEach(function(a){
+        var w=parseInt(a.t)||4;
+        a.t=Math.round(w*F)+' wks';
+      });
+    });
+  });
+})();
+
+/* ══════════════════════════════════════════
+   SCORING TABLE LOGIC
+══════════════════════════════════════════ */
+let tableData={};
+let sortAsc=false;
+
+function deepCopy(o){return JSON.parse(JSON.stringify(o));}
+function calcScore(v){return Math.round(COLS.reduce((s,c)=>s+v[c.key]*c.weight,0)*20);}
+function scoreClass(s){
+  if(s>=80)return{c:'sc-strong',b:'sb-strong',l:'Strong Fit'};
+  if(s>=70)return{c:'sc-good',b:'sb-good',l:'Good Fit'};
+  if(s>=60)return{c:'sc-mod',b:'sb-mod',l:'Moderate Fit'};
+  return{c:'sc-weak',b:'sb-weak',l:'Weak Fit'};
+}
+
+function buildTable(){
+  tableData=deepCopy(DEFAULTS);
+  renderTable();
+  renderTopScorerPlan();
+}
+
+function renderTable(){
+  const ids=Object.keys(tableData);
+  const scored=ids.map(id=>({id,score:calcScore(tableData[id])}));
+  scored.sort((a,b)=>sortAsc?a.score-b.score:b.score-a.score);
+  const tbody=document.getElementById('scoringTbody');
+  tbody.innerHTML='';
+  scored.forEach(({id,score})=>{
+    const co=tableData[id];
+    const sc=scoreClass(score);
+    const tr=document.createElement('tr');
+    const tdCo=document.createElement('td');
+    tdCo.className='co-cell';
+    tdCo.innerHTML=`<div class="co-name-cell" style="border-left:3px solid ${co.color};padding-left:8px;">${co.name}</div><div class="co-sector-cell">${co.sector}</div>`;
+    tr.appendChild(tdCo);
+    COLS.forEach(col=>{
+      const td=document.createElement('td');
+      const sel=document.createElement('select');
+      sel.className='dim-select';
+      col.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt.v;o.textContent=opt.l;if(opt.v===co[col.key])o.selected=true;sel.appendChild(o);});
+      sel.addEventListener('change',function(){tableData[id][col.key]=Number(this.value);refreshAll();});
+      td.appendChild(sel);
+      tr.appendChild(td);
+    });
+    const tdS=document.createElement('td');
+    tdS.className='score-cell';
+    tdS.innerHTML=`<div class="score-num ${sc.c}">${score}</div><div class="score-lbl ${sc.c}">${sc.l}</div><div class="score-bar-wrap"><div class="score-bar ${sc.b}" style="width:${score}%;"></div></div>`;
+    tr.appendChild(tdS);
+    tbody.appendChild(tr);
+  });
+}
+
+function refreshAll(){renderTable();renderTopScorerPlan();}
+
+function sortTable(){
+  sortAsc=!sortAsc;
+  const btn=document.getElementById('sortBtn');
+  btn.textContent=sortAsc?'↑ Score: Low → High':'↓ Sort by Score';
+  renderTable();
+}
+function resetDefaults(){tableData=deepCopy(DEFAULTS);sortAsc=false;document.getElementById('sortBtn').textContent='↓ Sort by Score';renderTable();renderTopScorerPlan();}
+
+/* ══════════════════════════════════════════
+   DYNAMIC TOP SCORER SECTION
+══════════════════════════════════════════ */
+function getTopScorer(){
+  const ids=Object.keys(tableData);
+  return ids.reduce((best,id)=>calcScore(tableData[id])>=calcScore(tableData[best])?id:best,ids[0]);
+}
+
+function cxColor(cx){return cx==='low'?'#1A6B5A':cx==='medium'?'#B8860B':'#8B1A1A';}
+function cxLabel(cx){return cx==='low'?'Low complexity':cx==='medium'?'Medium complexity':'High complexity';}
+function cxBadgeClass(cx){return cx==='low'?'bg':cx==='medium'?'ba':'br';}
+
+function renderTopScorerPlan(){
+  const topId=getTopScorer();
+  const topScore=calcScore(tableData[topId]);
+  const plan=CO_AI_PLANS[topId];
+  const co=tableData[topId];
+  const sc=scoreClass(topScore);
+  const section=document.getElementById('topScorerSection');
+  if(!plan){section.style.display='none';return;}
+  section.style.display='block';
+
+  let html=`
+    <div class="dyn-header" style="background:${co.color};">
+      <div>
+        <div class="dyn-label">Top-scoring company — recommended vertical anchor</div>
+        <div class="dyn-name">${co.name}</div>
+        <div class="dyn-sector">${co.sector} · ${plan.summary}</div>
+      </div>
+      <div class="dyn-score-box">
+        <div class="dyn-score-num">${topScore}</div>
+        <div class="dyn-score-lbl">${sc.l}</div>
+      </div>
+    </div>
+    <p style="font-size:15px;font-weight:600;color:var(--ink);margin:1rem 0 4px;">Top AI use cases &amp; agents required</p>
+    <p style="font-size:12px;color:var(--ink3);margin-bottom:1rem;">Each card shows what to build and how long it takes. Updates when you change the scores above.</p>
+    <div class="uc-grid">
+  `;
+
+  plan.usecases.forEach(uc=>{
+    const barColor=cxColor(uc.cx);
+    const left=((uc.s-1)/24*100).toFixed(1);
+    const width=((uc.e-uc.s+1)/24*100).toFixed(1);
+    const agentHTML=uc.agents.map(a=>`
+      <div class="agent-row">
+        <div class="agent-dot" style="background:${barColor};"></div>
+        <div class="agent-body">
+          <div class="agent-name">${a.n}</div>
+          <div class="agent-desc">${a.d}</div>
+          <div class="agent-build">⏱ Build time: ${a.t}</div>
+        </div>
+      </div>`).join('');
+    const totalAgents=uc.agents.length;
+    const maxBuildWks=Math.max(...uc.agents.map(a=>parseInt(a.t)||4));
+
+    html+=`
+      <div class="uc-card">
+        <div class="uc-top">
+          <div class="uc-top-row1">
+            <span class="uc-rank-badge" style="background:${co.color};">#${uc.rank}</span>
+            <span class="uc-title">${uc.name}</span>
+          </div>
+          <div class="uc-top-row2">
+            <span class="badge ${cxBadgeClass(uc.cx)}">${cxLabel(uc.cx)}</span>
+            <span class="uc-time">📅 Month ${uc.s}–${uc.e} &nbsp;·&nbsp; ${totalAgents} agent${totalAgents>1?'s':''}</span>
+          </div>
+        </div>
+        <div class="uc-rationale">${uc.note}</div>
+        <div class="uc-agents-wrap">
+          <div class="agents-hdr">AI agents required (${totalAgents})</div>
+          ${agentHTML}
+        </div>
+        <div class="uc-timeline">
+          <div class="mini-track">
+            <div class="mini-bar" style="left:${left}%;width:${width}%;background:${barColor};"></div>
+          </div>
+          <div class="mini-labels">
+            <span>M1</span><span>M6</span><span>M12</span><span>M18</span><span>M24</span>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  html+=`</div>`;
+
+  // GANTT SUMMARY
+  const MAX=36;
+  const ticks=[1,3,6,9,12,15,18,21,24];
+  let gantt=`
+    <div class="gantt-card" style="margin-top:1rem;">
+      <h3>Deployment roadmap — ${co.name}</h3>
+      <div class="ch-sub">24-month timeline · <span style="color:#1A6B5A;font-weight:600;">■ Low</span>&nbsp; <span style="color:#B8860B;font-weight:600;">■ Medium</span>&nbsp; <span style="color:#8B1A1A;font-weight:600;">■ High</span> complexity</div>
+      <div class="gantt-inner">
+        <div class="gantt-hdr">
+          <div class="gantt-lbl-spacer"></div>
+          <div class="gantt-months">
+            ${ticks.map(m=>`<div class="gantt-m-tick" style="left:${((m-1)/(MAX)*100).toFixed(1)}%">M${m}</div>`).join('')}
+          </div>
+        </div>`;
+
+  plan.usecases.forEach(uc=>{
+    const left=((uc.s-1)/MAX*100).toFixed(1);
+    const width=((uc.e-uc.s+1)/MAX*100).toFixed(1);
+    const bc=cxColor(uc.cx);
+    gantt+=`
+      <div class="gantt-row-wrap">
+        <div class="gantt-row-lbl">
+          <span class="gr-num">#${uc.rank}</span>
+          <span class="gr-name">${uc.name}</span>
+        </div>
+        <div class="gantt-track-full">
+          <div class="gantt-fill" style="left:${left}%;width:${width}%;background:${bc};">
+            <span class="gantt-fill-lbl">M${uc.s}–M${uc.e}</span>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  gantt+=`</div></div>`;
+  html+=gantt;
+  section.innerHTML=html;
+}
+
+/* ── Init ── */
+window.addEventListener('load',()=>{buildCharts();window._c=true;});
+
+function showAgent(id) {
+  document.querySelectorAll('.agent-flow-panel').forEach(p => p.classList.remove('active-flow'));
+  document.querySelectorAll('.agent-pill').forEach(b => b.classList.remove('active-pill'));
+  document.getElementById('flow-' + id).classList.add('active-flow');
+  document.getElementById('pill-' + id).classList.add('active-pill');
+}
+</script>
+</body>
+</html>
